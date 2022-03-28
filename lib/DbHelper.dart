@@ -4,16 +4,12 @@ class DbHelper {
   List<Category> Categories() {
     Category category = Category(1, "image/repair.png", "İş", 0);
     Category category2 =
-        Category(1, "image/electric-generator.png", "Jeneratör", 0);
-    Category category3 = Category(2, "image/power-source.png", "Ups", 0);
-    Category category4 = Category(3, "image/chillers.png", "Chiller", 0);
-    Category category5 = Category(3, "image/gas-heater.png", "Kazan", 0);
-    List<Category> categories = List<Category>.filled(5, category);
+        Category(1, "image/electric-generator.png", "Rutin Kontroller", 0);
+    
+    List<Category> categories = List<Category>.filled(2, category);
     categories[0] = category;
     categories[1] = category2;
-    categories[2] = category3;
-    categories[3] = category4;
-    categories[4] = category5;
+    
     return categories;
   }
 

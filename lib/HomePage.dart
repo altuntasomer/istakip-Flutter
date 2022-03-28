@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:istakip/Category.dart';
 import 'package:istakip/DbHelper.dart';
+import 'package:istakip/newJob.dart';
 import 'Detail.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,72 +57,27 @@ class HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(top: 20, left: 20),
-              child: Text(
-                "Merhaba",
-                style: TextStyle(
-                  color: Color(0xff363636),
-                  fontSize: 25,
-                  fontFamily: 'Roboto',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: Image.asset("image/logo_tr.png"),
                 ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 5, left: 20),
-              child: Text(
-                "Hoşgeldiniz",
-                style: TextStyle(
-                  color: Color(0xff363636),
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Roboto',
-                ),
-              ),
+              ],
             ),
             Container(
               width: size.width,
-              margin: EdgeInsets.only(top: 20, left: 20),
+              margin: EdgeInsets.only(left: 20),
               child: Stack(
                 fit: StackFit.loose,
-                children: [
-                  Container(
-                    child: Text(
-                      'Kategori',
-                      style: TextStyle(
-                        color: Color(0xff363636),
-                        fontSize: 20,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 20, top: 1),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Tümünü göster',
-                        style: TextStyle(
-                          color: Color(0xff5e5d5d),
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                children: [],
               ),
             ),
             Container(
-              height: 120,
-              margin: EdgeInsets.only(top: 20, left: 20),
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return demoCategories(jobs, categories[index]);
-                  }),
+              height: 60,
+              margin: EdgeInsets.only(left: 20),
+              child: demoCategories(jobs, categories[0]),
             ),
             Container(
               width: size.width,
@@ -140,20 +96,6 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(right: 20, top: 1),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Tümünü göster',
-                        style: TextStyle(
-                          color: Color(0xff5e5d5d),
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -166,7 +108,47 @@ class HomePageState extends State<HomePage> {
                       return demoTopRatedDr(context, jobs[index]);
                     }),
               ),
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 180,
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          child: SizedBox.fromSize(
+                            size: Size.fromRadius(30),
+                            child: FittedBox(
+                              child: Icon(Icons.add),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => NewJob()));
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "İş Ekle",
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
+                    )
+                  ]),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -183,10 +165,10 @@ class HomePageState extends State<HomePage> {
                     jobs: jobs, selectedCategory: category.id)));
       },
       child: Container(
-        width: 100,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(right: 15),
         decoration: BoxDecoration(
-          color: Color(0xff107163),
+          color: Color.fromARGB(255, 38, 174, 192),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -194,33 +176,14 @@ class HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              child: Image.asset(category.img, height: 50),
-            ),
-            Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                category.name,
+                "Rutin Kontroller",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 13,
+                  fontSize: 24,
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              padding: EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: Color(0xffd9fffa).withOpacity(0.07),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Text(
-                category.trainerCount.toString(),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 8,
-                  fontFamily: 'Roboto',
                 ),
               ),
             ),
