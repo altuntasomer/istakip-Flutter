@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:istakip/Category.dart';
 import 'package:istakip/DbHelper.dart';
 import 'package:istakip/newJob.dart';
@@ -16,9 +17,14 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget initScreen() {
-    List<Category> categories = DbHelper().Categories();
-
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    List<String> categories = ["Jeneratör", "UPS", "Chiller", "Isıtma"];
+    List<String> images = ["image/electric-generator.png","image/power-source.png","image/chillers.png","image/gas-heater.png"];
     List<Job> jobs = DbHelper().Jobs();
+    
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.green,
@@ -26,26 +32,19 @@ class HomePageState extends State<HomePage> {
         elevation: 0.0,
         backgroundColor: Colors.green,
         //centerTitle: true,
-        leading: Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
+        
         actions: [
-          GestureDetector(
-            child: Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.notifications_rounded,
-                color: Colors.white,
-              ),
-            ),
+
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Ömer ALTUNTAŞ",style: TextStyle(fontSize: 22),),
+            ],
           ),
-          GestureDetector(
-            child: Container(
-              margin: EdgeInsets.only(right: 5),
-              child: Image.asset("image/girl.png"),
-            ),
-          )
+          SizedBox(
+            width: 30,
+          ),
+          
         ],
       ),
       body: Container(
@@ -61,7 +60,7 @@ class HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 200,
+                  height: 150,
                   child: Image.asset("image/logo_tr.png"),
                 ),
               ],
@@ -69,15 +68,12 @@ class HomePageState extends State<HomePage> {
             Container(
               width: size.width,
               margin: EdgeInsets.only(left: 20),
-              child: Stack(
-                fit: StackFit.loose,
-                children: [],
-              ),
+              
             ),
             Container(
               height: 60,
               margin: EdgeInsets.only(left: 20),
-              child: demoCategories(jobs, categories[0]),
+              child: demoCategories(categories,images),
             ),
             Container(
               width: size.width,
@@ -112,57 +108,49 @@ class HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 180,
-                  decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10), topLeft: Radius.circular(10))),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          child: SizedBox.fromSize(
-                            size: Size.fromRadius(30),
-                            child: FittedBox(
-                              child: Icon(Icons.add),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => NewJob()));
-                          },
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NewJob()));
+                  },
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.add_circle,
+                        size: 60,
+                        color: Colors.green,
+                      ),
+                      Text(
+                        'İŞ EKLE',
+                        style: TextStyle(
+                          color: Color(0xff363636),
+                          fontSize: 20,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w700,
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "İş Ekle",
-                          style: TextStyle(fontSize: 20),
-                        )
-                      ],
-                    )
-                  ]),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 5,)
           ],
         ),
       ),
     );
   }
 
-  Widget demoCategories(List<Job> jobs, Category category) {
+  Widget demoCategories(List<String> categories,List<String> images) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CategoryTrainer(
-                    jobs: jobs, selectedCategory: category.id)));
+                builder: (context) => CategoryRoutine(
+                    routines: categories, images: images,)));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -259,7 +247,7 @@ class HomePageState extends State<HomePage> {
                             children: [
                               Container(
                                 child: Text(
-                                  "Rating: ",
+                                  job.date,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12,
@@ -267,16 +255,7 @@ class HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                child: Text(
-                                  job.user_id,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontFamily: 'Roboto',
-                                  ),
-                                ),
-                              )
+                              
                             ],
                           ),
                         )

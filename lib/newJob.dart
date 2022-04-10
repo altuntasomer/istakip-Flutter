@@ -1,4 +1,10 @@
+
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:istakip/TakePicture.dart';
+import 'package:camera/camera.dart';
 
 class NewJob extends StatefulWidget {
   const NewJob({Key? key}) : super(key: key);
@@ -8,89 +14,43 @@ class NewJob extends StatefulWidget {
 }
 
 class _NewJobState extends State<NewJob> {
+  List<XFile> photos = [];
   @override
   Widget build(BuildContext context) {
+
     return initScreen();
   }
 
   Widget initScreen() {
+    
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xff107163),
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Color(0xff107163),
-        //centerTitle: true,
-        leading: Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-        actions: [
-          GestureDetector(
-            child: Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.notifications_rounded,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          GestureDetector(
-            child: Container(
-              margin: EdgeInsets.only(right: 5),
-              child: Image.asset("image/girl.png"),
-            ),
-          )
-        ],
-      ),
       body: Container(
         decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: Color.fromARGB(255, 255, 255, 255),
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(30), topLeft: Radius.circular(30))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(height: 60,),
+            
             Container(
-              margin: EdgeInsets.only(top: 20, left: 20),
-              child: Text(
-                "Merhaba",
-                style: TextStyle(
-                  color: Color(0xff363636),
-                  fontSize: 25,
-                  fontFamily: 'Roboto',
-                ),
-              ),
-            ),
-            Container(
-              width: size.width,
-              margin: EdgeInsets.only(top: 20, left: 20),
-              child: Stack(
-                fit: StackFit.loose,
-                children: [
-                  Container(
-                    child: Text(
-                      'Kategori',
-                      style: TextStyle(
-                        color: Color(0xff363636),
-                        fontSize: 20,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 320,
-              margin: EdgeInsets.only(top: 20, left: 20),
+              height: 520,
+              margin: EdgeInsets.only(left: 20),
               child: ListView.builder(
+
+
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: photos.length,
+
                   itemBuilder: (BuildContext context, int index) {
-                    return demoCategories("image/power-source.png");
+                    print("******-*-*-**-*-*-*-*");
+                    print(index);
+                    print("******-*-*-**-*-*-*-*");
+                    return demoCategories(photos[index].path);
                   }),
             ),
             SizedBox(
@@ -104,7 +64,7 @@ class _NewJobState extends State<NewJob> {
                   ),
                   labelText: "Mahal Adı",
                   enabledBorder: InputBorder.none,
-                  labelStyle: const TextStyle(color: Colors.grey)),
+                  labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
             ),
             Container(
               child: Divider(
@@ -120,7 +80,7 @@ class _NewJobState extends State<NewJob> {
                   ),
                   labelText: "Açıklama",
                   enabledBorder: InputBorder.none,
-                  labelStyle: const TextStyle(color: Colors.grey)),
+                  labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
             ),
             Container(
               child: Divider(
@@ -129,14 +89,15 @@ class _NewJobState extends State<NewJob> {
             ),
             TextField(
               obscureText: false,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   icon: const Icon(
                     Icons.alarm,
                     color: Color(0xff107163),
                   ),
-                  labelText: "Tamamlama Süresi",
+                  labelText: "İş Süresi",
                   enabledBorder: InputBorder.none,
-                  labelStyle: const TextStyle(color: Colors.grey)),
+                  labelStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
             ),
             Container(
               child: Divider(
@@ -145,20 +106,37 @@ class _NewJobState extends State<NewJob> {
             ),
             Expanded(child: SizedBox()),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(width: 60,),
                 GestureDetector(
+                  onTap: () async {
+                    final cameras = await availableCameras();
+                    final firstCamera = cameras.first;
+
+                    XFile path = await Navigator.push(context,MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)) );
+                    photos.add(path);
+                    setState(() {
+
+                    });
+                    
+                  },
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xff107163),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    width: 100,
-                    height: 40,
-                    child: Text("Kaydet"),
+                    width: 60,
+                    height: 60,
+                    
+                    child: Image.asset("image/add-photo.png"),
                   ),
                 ),
-                SizedBox(width: 40,)
+                Expanded(child: SizedBox()),
+                GestureDetector(
+                  child: Icon(
+                    Icons.save,
+                    size: 60,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                SizedBox(width: 60,),
               ],
             ),
             SizedBox(height: 20),
@@ -168,13 +146,13 @@ class _NewJobState extends State<NewJob> {
     );
   }
 
-  Widget demoCategories(String uri) {
+  Widget demoCategories(String image) {
     return GestureDetector(
       child: Container(
         width: 320,
         margin: EdgeInsets.only(right: 15),
         decoration: BoxDecoration(
-          color: Color(0xff107163),
+          color: Color.fromARGB(255, 89, 131, 125),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -182,7 +160,7 @@ class _NewJobState extends State<NewJob> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              child: Image.asset(uri, height: 50),
+              child: Image.file(File(image)),
             ),
           ],
         ),

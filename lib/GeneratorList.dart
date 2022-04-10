@@ -2,31 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
 import 'package:istakip/Generator.dart';
-import 'package:istakip/GeneratorList.dart';
-import 'DbHelper.dart';
 import 'Detail.dart';
 
-class CategoryRoutine extends StatefulWidget {
-  final List<String> routines;
-  final List<String> images;
+class GeneratorList extends StatefulWidget {
+  final List<GeneratorKind> generatorList;
+  
 
-  const CategoryRoutine(
-      {Key? key, required this.routines, required this.images})
+  const GeneratorList(
+      {Key? key, required this.generatorList})
       : super(key: key);
 
   @override
-  State<CategoryRoutine> createState() => _CategoryRoutineState();
+  State<GeneratorList> createState() => _GeneratorList();
 }
 
-class _CategoryRoutineState extends State<CategoryRoutine> {
+class _GeneratorList extends State<GeneratorList> {
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.routines, widget.images);
+    return initWidget(context, widget.generatorList);
   }
 
   Widget initWidget(
-      
-      BuildContext context, List<String> routines, List<String> images) {
+      BuildContext context, List<GeneratorKind> generatorList) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
@@ -37,9 +34,9 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
               child: ListView.builder(
-                  itemCount: routines.length,
+                  itemCount: generatorList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, routines[index], images[index]);
+                    return demoTopRatedDr(context, generatorList[index]);
                   }),
             ),
           ),
@@ -49,7 +46,7 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, String routine, String image) {
+Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
@@ -64,15 +61,13 @@ Widget demoTopRatedDr(BuildContext context, String routine, String image) {
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: _buildRow(context, routine, image),
+      child: _buildRow(context, generatorList),
 
     ),
   );
 }
 
-Widget _buildRow(BuildContext context, String routine, String image) {
-  List<GeneratorKind> generatorKinds = DbHelper().GeneratorKinds();
-
+Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
   return Container(
     padding: const EdgeInsets.all(16),
     child: GestureDetector(
@@ -80,12 +75,12 @@ Widget _buildRow(BuildContext context, String routine, String image) {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => GeneratorList(generatorList: generatorKinds,)));
+                builder: (context) => GeneratorPage()));
       },
       child: Row(
         children: <Widget>[
           Image.asset(
-            image,
+            "image/electric-generator.png",
             width: 80,
             height: 80,
           ),
@@ -101,7 +96,7 @@ Widget _buildRow(BuildContext context, String routine, String image) {
                     
                     Column(
                       children: <Widget>[
-                        Text(routine, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                        Text(generatorList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
                       ],
                     ),
     

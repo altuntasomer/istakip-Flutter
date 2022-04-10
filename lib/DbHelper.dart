@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 
 class DbHelper {
-  List<Category> Categories() {
-    Category category = Category(1, "image/repair.png", "İş", 0);
-    Category category2 =
-        Category(1, "image/electric-generator.png", "Rutin Kontroller", 0);
-    
-    List<Category> categories = List<Category>.filled(2, category);
-    categories[0] = category;
-    categories[1] = category2;
-    
-    return categories;
-  }
 
   List<Job> Jobs() {
     Job job = Job(
@@ -32,16 +21,18 @@ class DbHelper {
     jobs[4] = job5;
     return jobs;
   }
+  List<GeneratorKind> GeneratorKinds()
+  {
+    
+    GeneratorKind kind1 = GeneratorKind("1", "150 KVA", "Küçükyalı");
+    GeneratorKind kind2 = GeneratorKind("2", "630 KVA", "Küçükyalı");
+    GeneratorKind kind3 = GeneratorKind("3", "1100 KVA", "Küçükyalı");
+    GeneratorKind kind4 = GeneratorKind("4", "900 KVA", "Sütlüce");
+
+    return [kind1, kind2, kind3, kind4];
+  }
 }
 
-class Category {
-  late int id;
-  late String img;
-  late String name;
-  late int trainerCount;
-
-  Category(this.id, this.img, this.name, this.trainerCount);
-}
 
 class Job {
   late String date;
@@ -81,6 +72,14 @@ class Generator {
       this.workHour,
       this.date,
       this.waterControl);
+}
+
+class GeneratorKind {
+  late String id;
+  late String name;
+  late String campus;
+
+  GeneratorKind(this.id, this.name, this.campus);
 }
 
 class Ups {
@@ -149,4 +148,29 @@ class Heater {
       this.fireControl,
       this.date,
       this.waterPressure);
+}
+
+class User {
+  late String id;
+  late String name;
+  late String surname;
+  late String email;
+  late String password;
+  late String role;
+  late String campus;
+  late String department;
+  late String phone;
+  late String image;
+
+  User(
+      this.id,
+      this.name,
+      this.surname,
+      this.email,
+      this.password,
+      this.role,
+      this.campus,
+      this.department,
+      this.phone,
+      this.image);
 }
