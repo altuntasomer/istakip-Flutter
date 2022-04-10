@@ -1,229 +1,219 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:io';
 
-class UpsPage extends StatelessWidget {
-  final campus;
-  final kind;
-  const UpsPage({Key? key, @required this.campus, this.kind}) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:istakip/TakePicture.dart';
+import 'package:camera/camera.dart';
+
+class UpsPage extends StatefulWidget {
+  const UpsPage({Key? key}) : super(key: key);
 
   @override
+  State<UpsPage> createState() => UpsPageState();
+}
+
+class UpsPageState extends State<UpsPage> {
+  List<XFile> photos = [];
+  var oilcontrol = false;
+  var watercontrol = false;
+  var fuel = ["1/4", "1/2", "3/4", "Full"];
+
+  var dropdownFuel, dropdownFuel2;
+  @override
   Widget build(BuildContext context) {
+    return initScreen();
+  }
+
+  Widget initScreen() {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                "UPS",
+      backgroundColor: Color(0xff107163),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+              color: Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(30), topLeft: Radius.circular(30))),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 60,
               ),
-            ],
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: ButtonTheme(
-                    minWidth: 0.0,
-                    height: 50.0,
-                    highlightColor: Colors.orange,
-                    buttonColor:
-                        Theme.of(context).primaryColor.withOpacity(1.0),
-                    child: RaisedButton(
-                      child: Text("Kaydet"),
-                      onPressed: () {
-                        // fonksiyon gelecek
-                        Navigator.pop(context);
-                      },
+              Container(
+                height: 520,
+                margin: EdgeInsets.only(left: 20),
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: photos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      print("******-*-*-**-*-*-*-*");
+                      print(index);
+                      print("******-*-*-**-*-*-*-*");
+                      return demoCategories(photos[index].path);
+                    }),
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.input,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Giriş Voltajı (V)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.output,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Çıkış Voltajı (V)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.charging_station_outlined,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Yük Seviyesi (%)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.thermostat,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Ortam sıcaklığı (°C)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              
+              TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.description_outlined,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Açıklama",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 60,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      final cameras = await availableCameras();
+                      final firstCamera = cameras.first;
+      
+                      XFile path = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TakePictureScreen(camera: firstCamera)));
+                      photos.add(path);
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      child: Image.asset("image/add-photo.png"),
                     ),
                   ),
-                )),
-          ],
-        ),
-        body: upsWidget());
-  }
-}
-
-class upsWidget extends StatefulWidget {
-  const upsWidget({Key? key}) : super(key: key);
-
-  @override
-  State<upsWidget> createState() => _upsWidgetState();
-}
-
-class _upsWidgetState extends State<upsWidget> {
-  var kampus = ["Küçükyalı", "Sütlüce"];
-  var tur = ["110", "125"];
-
-  var dropdownKampus;
-  var dropdownTur;
-
-  TextEditingController aciklama = new TextEditingController();
-  TextEditingController girisVoltaj = new TextEditingController();
-  TextEditingController cikisVoltaj = new TextEditingController();
-  TextEditingController yukSeviyesi = new TextEditingController();
-  TextEditingController sicaklik = new TextEditingController();
-
-  void initState() {
-    dropdownKampus = this.kampus.first;
-    dropdownTur = this.tur.first;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DropdownButton<String>(
-              value: dropdownKampus,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 30,
+                  Expanded(child: SizedBox()),
+                  GestureDetector(
+                    child: Icon(
+                      Icons.save,
+                      size: 60,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 60,
+                  ),
+                ],
               ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownKampus = newValue!;
-                });
-              },
-              items: kampus.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            DropdownButton<String>(
-              value: dropdownTur,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-              ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownTur = newValue!;
-                });
-              },
-              items: tur.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Giriş Voltajı:"),
-            Container(
-                width: 100.0,
-                child: TextField(
-                  controller: girisVoltaj,
-                )),
-            Text("V")
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Çıkış Voltajı:"),
-            Container(
-                width: 100.0,
-                child: TextField(
-                  controller: cikisVoltaj,
-                )),
-            Text("V"),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Yük Seviyesi"),
-            Container(
-                width: 100.0,
-                child: TextField(
-                  controller: yukSeviyesi,
-                )),
-            Text("%"),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Ortam Sıcaklığı:"),
-            Container(
-                width: 100.0,
-                child: TextField(
-                  controller: sicaklik,
-                )),
-            Text("°C"),
-          ],
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        TextField(
-          controller: aciklama,
-          onChanged: (text) {
-            print(aciklama.text);
-          },
-          decoration: InputDecoration(
-            hintText: "Açıklama",
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
+              SizedBox(height: 20),
+            ],
           ),
         ),
-        SizedBox(
-          height: 30,
+      ),
+    );
+  }
+
+  Widget demoCategories(String image) {
+    return GestureDetector(
+      child: Container(
+        width: 320,
+        margin: EdgeInsets.only(right: 15),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 89, 131, 125),
+          borderRadius: BorderRadius.circular(10),
         ),
-        Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              width: 150,
-              height: 150,
-            ),
-            const SizedBox(width: 65.0),
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              width: 150,
-              height: 150,
+            Container(
+              child: Image.file(File(image)),
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
