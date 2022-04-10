@@ -17,7 +17,8 @@ class _GeneratorPageState extends State<GeneratorPage> {
   var watercontrol = false;
   var fuel = ["1/4", "1/2", "3/4", "Full"];
 
-  var dropdownFuel;
+  var dropdownFuel, dropdownFuel2;
+
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -26,7 +27,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xff107163),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,31 +58,34 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 SizedBox(
                   width: 90,
                 ),
-                
                 Text("Yakıt Seviyesi"),
                 Expanded(child: SizedBox()),
-                DropdownButton<String>(
-                  value: fuel[0],
-                  //icon: const Icon(Icons.thumb_down_alt),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0),
+                    border: Border.all(
+                      color: Color(0xff107163),
+                      width: 1,
+                    ),
                   ),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
+                  child: DropdownButton<String>(
+                    value: dropdownFuel2,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownFuel2 = newValue!;
+                      });
+                    },
+                    items: fuel.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownFuel = newValue!;
-                    });
-                  },
-                  items: fuel.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
                 SizedBox(
                   width: 90,
@@ -99,31 +103,36 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 SizedBox(
                   width: 90,
                 ),
-                
                 Text("Yedek Depo Seviyesi"),
                 Expanded(child: SizedBox()),
-                DropdownButton<String>(
-                  value: fuel[0],
-                  //icon: const Icon(Icons.thumb_down_alt),
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0),
+                    border: Border.all(
+                      color: Color(0xff107163),
+                      width: 1,
+                    ),
                   ),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
+                  child: DropdownButton<String>(
+                    value: dropdownFuel,
+                    //icon: const Icon(Icons.thumb_down_alt),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                    ),
+
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownFuel = newValue!;
+                      });
+                    },
+                    items: fuel.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownFuel = newValue!;
-                    });
-                  },
-                  items: fuel.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
                 SizedBox(
                   width: 90,
@@ -143,9 +152,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 ),
                 Text("Soğutma Suyu Kontrolü"),
                 Expanded(
-                  child: SizedBox(
-                    
-                  ),
+                  child: SizedBox(),
                 ),
                 Checkbox(
                   value: watercontrol,
@@ -173,8 +180,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 ),
                 Text("Yağ Kontrolü"),
                 Expanded(
-                  child: SizedBox(
-                  ),
+                  child: SizedBox(),
                 ),
                 Checkbox(
                   value: oilcontrol,
@@ -245,7 +251,6 @@ class _GeneratorPageState extends State<GeneratorPage> {
                 color: Colors.black,
               ),
             ),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -256,7 +261,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   onTap: () async {
                     final cameras = await availableCameras();
                     final firstCamera = cameras.first;
-      
+
                     XFile path = await Navigator.push(
                         context,
                         MaterialPageRoute(
