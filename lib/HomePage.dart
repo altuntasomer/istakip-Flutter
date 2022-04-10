@@ -21,7 +21,7 @@ class HomePageState extends State<HomePage> {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-    List<String> categories = ["Jeneratör", "UPS", "Chiller", "Isıtma"];
+    List<String> categories = ["Jenerator", "UPS", "Chiller", "Isıtma"];
     List<String> images = ["image/electric-generator.png","image/power-source.png","image/chillers.png","image/gas-heater.png"];
     List<Job> jobs = DbHelper().Jobs();
     

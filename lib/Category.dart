@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
 import 'package:istakip/Generator.dart';
 import 'package:istakip/GeneratorList.dart';
+import 'ChillerList.dart';
 import 'DbHelper.dart';
 import 'Detail.dart';
+import 'HeaterList.dart';
+import 'UpsList.dart';
 
 class CategoryRoutine extends StatefulWidget {
   final List<String> routines;
@@ -39,7 +42,7 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
               child: ListView.builder(
                   itemCount: routines.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, routines[index], images[index]);
+                    return demoTopRatedDr(context, routines[index], images[index], index);
                   }),
             ),
           ),
@@ -49,12 +52,37 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, String routine, String image) {
+Widget demoTopRatedDr(BuildContext context, String routine, String image, int index) {
   var size = MediaQuery.of(context).size;
+  List<GeneratorKind> generatorKinds = DbHelper().GeneratorKinds();
+  List<UpsKind> upsKinds = DbHelper().UpsKinds();
+  List<ChillerKind> chillerKinds = DbHelper().ChillerKinds();
+  List<HeaterKind> heaterKinds = DbHelper().HeaterKinds();
   return GestureDetector(
     onTap: () {
-      /*Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DoctorDetailPage()));*/
+
+      if (routine == "Jenerator") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => GeneratorList(generatorList: generatorKinds,)));
+      } else if (routine == "UPS") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UpsList(upsList: upsKinds,)));
+      } else if (routine == "Chiller") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChillerList(chillerList: chillerKinds,)));
+      } 
+      else if (routine == "Isıtma") {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HeaterList(heaterList: heaterKinds,)));
+      } 
     },
     child: Container(
       height: 115,
@@ -71,55 +99,46 @@ Widget demoTopRatedDr(BuildContext context, String routine, String image) {
 }
 
 Widget _buildRow(BuildContext context, String routine, String image) {
-  List<GeneratorKind> generatorKinds = DbHelper().GeneratorKinds();
-
+  
   return Container(
     padding: const EdgeInsets.all(16),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => GeneratorList(generatorList: generatorKinds,)));
-      },
-      child: Row(
-        children: <Widget>[
-          Image.asset(
-            image,
-            width: 80,
-            height: 80,
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    
-                    Column(
-                      children: <Widget>[
-                        Text(routine, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
-                      ],
-                    ),
+    child: Row(
+      children: <Widget>[
+        Image.asset(
+          image,
+          width: 80,
+          height: 80,
+        ),
+        SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  
+                  Column(
+                    children: <Widget>[
+                      Text(routine, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                    ],
+                  ),
     
-                  ],
-                ),
-                // OutlineButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //               builder: (context) => DoctorDetailPage(job: job)));
-                //     },
-                //     child: Text("Görüntüle")),
-              ],
-            ),
+                ],
+              ),
+              // OutlineButton(
+              //     onPressed: () {
+              //       Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => DoctorDetailPage(job: job)));
+              //     },
+              //     child: Text("Görüntüle")),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

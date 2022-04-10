@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Heater extends StatelessWidget {
+class HeaterPage extends StatelessWidget {
   final campus;
   final kind;
   final position;
-  const Heater({Key? key, @required this.campus, this.kind, this.position}) : super(key: key);
+  const HeaterPage({Key? key, @required this.campus, this.kind, this.position}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

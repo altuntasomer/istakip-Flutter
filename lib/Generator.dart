@@ -1,295 +1,315 @@
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:istakip/TakePicture.dart';
+import 'package:camera/camera.dart';
 
-class GeneratorPage extends StatelessWidget {
-  
-  const GeneratorPage({Key? key,}) : super(key: key);
+class GeneratorPage extends StatefulWidget {
+  const GeneratorPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<GeneratorPage> createState() => _GeneratorPageState();
+}
 
+class _GeneratorPageState extends State<GeneratorPage> {
+  List<XFile> photos = [];
+  var oilcontrol = false;
+  var watercontrol = false;
+  var fuel = ["1/4", "1/2", "3/4", "Full"];
+
+  var dropdownFuel;
+  @override
+  Widget build(BuildContext context) {
+    return initScreen();
+  }
+
+  Widget initScreen() {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                "JENERATÖR",
-              ),
-            ],
-          ),
-
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
+      backgroundColor: Color(0xff107163),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 60,
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          actions: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: ButtonTheme(
-                    minWidth: 0.0,
-                    height: 50.0,
-                    highlightColor: Colors.orange,
-                    buttonColor:
-                        Theme.of(context).primaryColor.withOpacity(1.0),
-                    child: RaisedButton(
-                      child: Text("Kaydet"),
-                      onPressed: () {
-                        // fonksiyon gelecek
-                        Navigator.pop(context);
-                      },
-                    ),
+            Container(
+              height: 520,
+              margin: EdgeInsets.only(left: 20),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: photos.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    print("******-*-*-**-*-*-*-*");
+                    print(index);
+                    print("******-*-*-**-*-*-*-*");
+                    return demoCategories(photos[index].path);
+                  }),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 90,
+                ),
+                
+                Text("Yakıt Seviyesi"),
+                Expanded(child: SizedBox()),
+                DropdownButton<String>(
+                  value: fuel[0],
+                  //icon: const Icon(Icons.thumb_down_alt),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
                   ),
-                )),
-          ],
-        ),
-        body: MyStatefulWidget());
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
-
-  @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  var kampus = ["Küçükyalı","Sütlüce"];
-  var tur = ["110","125"];
-  var yakitkontrolu = ["1/4","1/2"];
-  var yedekdepo = ["1/4","1/2"];
-  var sogutmasuyu = false;
-  var yagkontrolu = false;
-  var yedekdepoDropValue;
-  var yakitkontroluDropValue;
-
-  var dropdownKampus;
-  var dropdownTur;
-
-
-  TextEditingController calismaSaati = new TextEditingController();
-
-  void initState() {
-    dropdownKampus = this.kampus.first;
-    dropdownTur = this.tur.first;
-    yakitkontroluDropValue = this.yakitkontrolu.first;
-    yedekdepoDropValue = this.yedekdepo.first;
-    super.initState();
-  }
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DropdownButton<String>(
-              value: dropdownKampus,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-              ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownKampus = newValue!;
-                });
-              },
-              items: kampus
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownFuel = newValue!;
+                    });
+                  },
+                  items: fuel.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  width: 90,
+                ),
+              ],
             ),
-
-            DropdownButton<String>(
-              value: dropdownTur,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
+            Container(
+              child: Divider(
                 color: Colors.black,
-                fontSize: 30,
               ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownTur = newValue!;
-                });
-              },
-              items: tur
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
-          ],
-
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Yakıt Seviyesi Kontrolü:"),
-            DropdownButton<String>(
-              value: yakitkontroluDropValue,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 90,
+                ),
+                
+                Text("Yedek Depo Seviyesi"),
+                Expanded(child: SizedBox()),
+                DropdownButton<String>(
+                  value: fuel[0],
+                  //icon: const Icon(Icons.thumb_down_alt),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                  ),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownFuel = newValue!;
+                    });
+                  },
+                  items: fuel.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  width: 90,
+                ),
+              ],
+            ),
+            Container(
+              child: Divider(
                 color: Colors.black,
-                fontSize: 30,
               ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  yakitkontroluDropValue = newValue!;
-                });
-              },
-              items: yakitkontrolu
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
-          ],
-
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Yedek Depo Seviyesi:"),
-            DropdownButton<String>(
-              value: yakitkontroluDropValue,
-              //icon: const Icon(Icons.thumb_down_alt),
-              style: const TextStyle(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 90,
+                ),
+                Text("Soğutma Suyu Kontrolü"),
+                Expanded(
+                  child: SizedBox(
+                    
+                  ),
+                ),
+                Checkbox(
+                  value: watercontrol,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      watercontrol = value!;
+                    });
+                  },
+                ),
+                SizedBox(
+                  width: 90,
+                ),
+              ],
+            ),
+            Container(
+              child: Divider(
                 color: Colors.black,
-                fontSize: 30,
               ),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 90,
+                ),
+                Text("Yağ Kontrolü"),
+                Expanded(
+                  child: SizedBox(
+                  ),
+                ),
+                Checkbox(
+                  value: oilcontrol,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      oilcontrol = value!;
+                    });
+                  },
+                ),
+                SizedBox(
+                  width: 90,
+                ),
+              ],
+            ),
+            Container(
+              child: Divider(
+                color: Colors.black,
               ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  yedekdepoDropValue = newValue!;
-                });
-              },
-              items: yedekdepo
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
+            TextField(
+              decoration: InputDecoration(
+                  icon: const Icon(
+                    Icons.place,
+                    color: Color(0xff107163),
+                  ),
+                  labelText: "Jeneratör gücü",
+                  enabledBorder: InputBorder.none,
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+            ),
+            Container(
+              child: Divider(
+                color: Colors.black,
+              ),
+            ),
+            TextField(
+              obscureText: false,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                  icon: const Icon(
+                    Icons.alarm,
+                    color: Color(0xff107163),
+                  ),
+                  labelText: "Çalışma Saati",
+                  enabledBorder: InputBorder.none,
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+            ),
+            Container(
+              child: Divider(
+                color: Colors.black,
+              ),
+            ),
+            TextField(
+              obscureText: false,
+              decoration: InputDecoration(
+                  icon: const Icon(
+                    Icons.description_outlined,
+                    color: Color(0xff107163),
+                  ),
+                  labelText: "Açıklama",
+                  enabledBorder: InputBorder.none,
+                  labelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+            ),
+            Container(
+              child: Divider(
+                color: Colors.black,
+              ),
+            ),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 60,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    final cameras = await availableCameras();
+                    final firstCamera = cameras.first;
+      
+                    XFile path = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                TakePictureScreen(camera: firstCamera)));
+                    photos.add(path);
+                    setState(() {});
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    child: Image.asset("image/add-photo.png"),
+                  ),
+                ),
+                Expanded(child: SizedBox()),
+                GestureDetector(
+                  child: Icon(
+                    Icons.save,
+                    size: 60,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                SizedBox(
+                  width: 60,
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
           ],
-
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Soğutma Suyu Kontrolü"),
-            SizedBox(width: 10,),
-            Checkbox(value: this.sogutmasuyu, onChanged: (bool ? value){
-              setState(() {
-                this.sogutmasuyu = value!;
-              });
-            },
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("Yağ Kontrolü"),
-            SizedBox(width: 10,),
-            Checkbox(value: this.yagkontrolu, onChanged: (bool ? value){
-              setState(() {
-                this.yagkontrolu = value!;
-              });
-            },
-            )
-          ],
-        ),
-        TextField(
-          controller: calismaSaati,
-          onChanged: (text){
-            print(calismaSaati.text);
-          },
-          decoration: InputDecoration(
-            hintText: "Çalışma Saati",
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
-          ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: "Açıklama",
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.cyan),
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              width: 150,
-              height: 150,
-            ),
-            const SizedBox(width: 65.0),
-            const Image(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              width: 150,
-              height: 150,
-            ),
-          ],
-        ),
-      ],
-
-
-
+      ),
     );
+  }
 
-
-
+  Widget demoCategories(String image) {
+    return GestureDetector(
+      child: Container(
+        width: 320,
+        margin: EdgeInsets.only(right: 15),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 89, 131, 125),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              child: Image.file(File(image)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

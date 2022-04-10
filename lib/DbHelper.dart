@@ -31,6 +31,35 @@ class DbHelper {
 
     return [kind1, kind2, kind3, kind4];
   }
+
+  List<UpsKind> UpsKinds()
+  {
+    UpsKind kind1 = UpsKind("1", "80 KVA", "Küçükyalı");
+    UpsKind kind2 = UpsKind("2", "100 KVA", "Küçükyalı");
+    UpsKind kind3 = UpsKind("3", "10 KVA", "Küçükyalı");
+    UpsKind kind4 = UpsKind("4", "80 KVA", "Sütlüce");
+
+    return [kind1, kind2, kind3, kind4];
+  }
+
+  List<ChillerKind> ChillerKinds()
+  {
+    ChillerKind kind1 = ChillerKind("1", "A BLOK 1 NO'LU CHİLLER", "Küçükyalı");
+    ChillerKind kind2 = ChillerKind("2", "A BLOK 2 NO'LU CHİLLER", "Küçükyalı");
+    ChillerKind kind3 = ChillerKind("3", "B BLOK CHİLLER", "Küçükyalı");
+    ChillerKind kind4 = ChillerKind("4", "C BLOK CHİLLER", "Sütlüce");
+
+    return [kind1, kind2, kind3, kind4];
+  }
+  List<HeaterKind> HeaterKinds()
+  {
+    HeaterKind kind1 = HeaterKind("1", "A BLOK 1 NO'LU KAZAN DAİRESİ", "Küçükyalı");
+    HeaterKind kind2 = HeaterKind("2", "A BLOK 2 NO'LU KAZAN DAİRESİ", "Küçükyalı");
+    HeaterKind kind3 = HeaterKind("3", "B BLOK BOYLER", "Küçükyalı");
+    HeaterKind kind4 = HeaterKind("4", "A BLOK BOYLER", "Sütlüce");
+
+    return [kind1, kind2, kind3, kind4];
+  }
 }
 
 
@@ -98,6 +127,14 @@ class Ups {
       this.voltageIn, this.user_id, this.voltageOut, this.date, this.load);
 }
 
+class UpsKind {
+  late String id;
+  late String name;
+  late String campus;
+
+  UpsKind(this.id, this.name, this.campus);
+}
+
 class Chiller {
   late String id;
   late String campus;
@@ -121,6 +158,14 @@ class Chiller {
       this.pumpControl,
       this.date,
       this.waterPressure);
+}
+
+class ChillerKind {
+  late String id;
+  late String name;
+  late String campus;
+
+  ChillerKind(this.id, this.name, this.campus);
 }
 
 class Heater {
@@ -148,6 +193,14 @@ class Heater {
       this.fireControl,
       this.date,
       this.waterPressure);
+}
+
+class HeaterKind {
+  late String id;
+  late String name;
+  late String campus;
+
+  HeaterKind(this.id, this.name, this.campus);
 }
 
 class User {

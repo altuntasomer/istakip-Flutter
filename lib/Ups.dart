@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Ups extends StatelessWidget {
+class UpsPage extends StatelessWidget {
   final campus;
   final kind;
-  const Ups({Key? key, @required this.campus, this.kind}) : super(key: key);
+  const UpsPage({Key? key, @required this.campus, this.kind}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

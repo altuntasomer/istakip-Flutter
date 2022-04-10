@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Chiller extends StatelessWidget {
+class ChillerPage extends StatelessWidget {
   final campus;
   final kind;
-  const Chiller({Key? key, @required this.campus, this.kind}) : super(key: key);
+  const ChillerPage({Key? key, @required this.campus, this.kind}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

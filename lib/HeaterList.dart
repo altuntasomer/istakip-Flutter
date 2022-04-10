@@ -2,28 +2,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
 import 'package:istakip/Generator.dart';
+import 'Chiller.dart';
 import 'Detail.dart';
+import 'Heater.dart';
+import 'Ups.dart';
 
-class GeneratorList extends StatefulWidget {
-  final List<GeneratorKind> generatorList;
+class HeaterList extends StatefulWidget {
+  final List<HeaterKind> heaterList;
   
 
-  const GeneratorList(
-      {Key? key, required this.generatorList})
+  const HeaterList(
+      {Key? key, required this.heaterList})
       : super(key: key);
 
   @override
-  State<GeneratorList> createState() => _GeneratorList();
+  State<HeaterList> createState() => _HeaterList();
 }
 
-class _GeneratorList extends State<GeneratorList> {
+class _HeaterList extends State<HeaterList> {
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.generatorList);
+    return initWidget(context, widget.heaterList);
   }
 
   Widget initWidget(
-      BuildContext context, List<GeneratorKind> generatorList) {
+      BuildContext context, List<HeaterKind> heaterList) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
@@ -34,9 +37,9 @@ class _GeneratorList extends State<GeneratorList> {
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
               child: ListView.builder(
-                  itemCount: generatorList.length,
+                  itemCount: heaterList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, generatorList[index]);
+                    return demoTopRatedDr(context, heaterList[index]);
                   }),
             ),
           ),
@@ -46,14 +49,14 @@ class _GeneratorList extends State<GeneratorList> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
+Widget demoTopRatedDr(BuildContext context, HeaterKind heaterList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => GeneratorPage()));
+                builder: (context) => HeaterPage()));
       },
     child: Container(
       height: 115,
@@ -63,19 +66,19 @@ Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: _buildRow(context, generatorList),
+      child: _buildRow(context, heaterList),
 
     ),
   );
 }
 
-Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
+Widget _buildRow(BuildContext context, HeaterKind heaterList) {
   return Container(
     padding: const EdgeInsets.all(16),
     child: Row(
       children: <Widget>[
         Image.asset(
-          "image/electric-generator.png",
+          "image/gas-heater.png",
           width: 80,
           height: 80,
         ),
@@ -91,7 +94,7 @@ Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
                   
                   Column(
                     children: <Widget>[
-                      Text(generatorList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                      Text(heaterList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
                     ],
                   ),
     

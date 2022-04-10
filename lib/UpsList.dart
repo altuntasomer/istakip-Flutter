@@ -3,27 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
 import 'package:istakip/Generator.dart';
 import 'Detail.dart';
+import 'Ups.dart';
 
-class GeneratorList extends StatefulWidget {
-  final List<GeneratorKind> generatorList;
+class UpsList extends StatefulWidget {
+  final List<UpsKind> upsList;
   
 
-  const GeneratorList(
-      {Key? key, required this.generatorList})
+  const UpsList(
+      {Key? key, required this.upsList})
       : super(key: key);
 
   @override
-  State<GeneratorList> createState() => _GeneratorList();
+  State<UpsList> createState() => _UpsList();
 }
 
-class _GeneratorList extends State<GeneratorList> {
+class _UpsList extends State<UpsList> {
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.generatorList);
+    return initWidget(context, widget.upsList);
   }
 
   Widget initWidget(
-      BuildContext context, List<GeneratorKind> generatorList) {
+      BuildContext context, List<UpsKind> generatorList) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
@@ -46,14 +47,14 @@ class _GeneratorList extends State<GeneratorList> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
+Widget demoTopRatedDr(BuildContext context, UpsKind upsList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => GeneratorPage()));
+                builder: (context) => UpsPage()));
       },
     child: Container(
       height: 115,
@@ -63,19 +64,19 @@ Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: _buildRow(context, generatorList),
+      child: _buildRow(context, upsList),
 
     ),
   );
 }
 
-Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
+Widget _buildRow(BuildContext context, UpsKind upsList) {
   return Container(
     padding: const EdgeInsets.all(16),
     child: Row(
       children: <Widget>[
         Image.asset(
-          "image/electric-generator.png",
+          "image/power-source.png",
           width: 80,
           height: 80,
         ),
@@ -91,7 +92,7 @@ Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
                   
                   Column(
                     children: <Widget>[
-                      Text(generatorList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                      Text(upsList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
                     ],
                   ),
     
