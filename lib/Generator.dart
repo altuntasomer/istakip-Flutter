@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
