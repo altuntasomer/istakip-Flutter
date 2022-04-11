@@ -39,9 +39,8 @@ class HeaterPageState extends State<HeaterPage> {
               SizedBox(
                 height: 60,
               ),
-              
               Container(
-                height: 520,
+                height: photos.length > 0 ? 400 : 0,
                 margin: EdgeInsets.only(left: 20),
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -64,9 +63,7 @@ class HeaterPageState extends State<HeaterPage> {
                   ),
                   Text("Soğutma Suyu Kontrolü"),
                   Expanded(
-                    child: SizedBox(
-                      
-                    ),
+                    child: SizedBox(),
                   ),
                   Checkbox(
                     value: watercontrol,
@@ -81,7 +78,6 @@ class HeaterPageState extends State<HeaterPage> {
                   ),
                 ],
               ),
-              
               Container(
                 child: Divider(
                   color: Colors.black,
@@ -95,9 +91,7 @@ class HeaterPageState extends State<HeaterPage> {
                   ),
                   Text("Soğutma Suyu Kontrolü"),
                   Expanded(
-                    child: SizedBox(
-                      
-                    ),
+                    child: SizedBox(),
                   ),
                   Checkbox(
                     value: watercontrol,
@@ -153,7 +147,6 @@ class HeaterPageState extends State<HeaterPage> {
                   color: Colors.black,
                 ),
               ),
-              
               TextField(
                 obscureText: false,
                 decoration: InputDecoration(
@@ -184,7 +177,7 @@ class HeaterPageState extends State<HeaterPage> {
                     onTap: () async {
                       final cameras = await availableCameras();
                       final firstCamera = cameras.first;
-      
+
                       XFile path = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -223,21 +216,13 @@ class HeaterPageState extends State<HeaterPage> {
   Widget demoCategories(String image) {
     return GestureDetector(
       child: Container(
-        width: 320,
+        width: 300,
         margin: EdgeInsets.only(right: 15),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 89, 131, 125),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Image.file(File(image)),
-            ),
-          ],
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+                image: FileImage(File(image)), fit: BoxFit.fill)),
       ),
     );
   }

@@ -1,19 +1,22 @@
-import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
-class NewJob extends StatefulWidget {
-  const NewJob({Key? key}) : super(key: key);
+class ChillerPage extends StatefulWidget {
+  const ChillerPage({Key? key}) : super(key: key);
 
   @override
-  State<NewJob> createState() => _NewJobState();
+  State<ChillerPage> createState() => ChillerPageState();
 }
 
-class _NewJobState extends State<NewJob> {
+class ChillerPageState extends State<ChillerPage> {
   List<XFile> photos = [];
+  var oilcontrol = false;
+  var watercontrol = false;
+  var fuel = ["1/4", "1/2", "3/4", "Full"];
+
+  var dropdownFuel, dropdownFuel2;
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -22,7 +25,7 @@ class _NewJobState extends State<NewJob> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color(0xff107163),
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -53,12 +56,46 @@ class _NewJobState extends State<NewJob> {
                 height: 40,
               ),
               TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    labelText: "Gaz Basıncı (Bar)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
-                      Icons.place,
+                      Icons.compress,
                       color: Color(0xff107163),
                     ),
-                    labelText: "Mahal Adı",
+                    labelText: "Su Basıncı (Bar)",
+                    enabledBorder: InputBorder.none,
+                    labelStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              TextField(
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    icon: const Icon(
+                      Icons.thermostat,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Tesisat sıcaklığı (°C)",
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -76,24 +113,6 @@ class _NewJobState extends State<NewJob> {
                       color: Color(0xff107163),
                     ),
                     labelText: "Açıklama",
-                    enabledBorder: InputBorder.none,
-                    labelStyle: const TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
-              ),
-              Container(
-                child: Divider(
-                  color: Colors.black,
-                ),
-              ),
-              TextField(
-                obscureText: false,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    icon: const Icon(
-                      Icons.alarm,
-                      color: Color(0xff107163),
-                    ),
-                    labelText: "İş Süresi",
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),

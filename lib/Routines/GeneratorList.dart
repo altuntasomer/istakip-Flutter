@@ -1,36 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
-import 'package:istakip/Generator.dart';
-import 'Detail.dart';
-import 'Ups.dart';
+import 'package:istakip/Routines/Generator.dart';
 
-class UpsList extends StatefulWidget {
-  final List<UpsKind> upsList;
-  
+class GeneratorList extends StatefulWidget {
+  final List<GeneratorKind> generatorList;
 
-  const UpsList(
-      {Key? key, required this.upsList})
+  const GeneratorList({Key? key, required this.generatorList})
       : super(key: key);
 
   @override
-  State<UpsList> createState() => _UpsList();
+  State<GeneratorList> createState() => _GeneratorList();
 }
 
-class _UpsList extends State<UpsList> {
+class _GeneratorList extends State<GeneratorList> {
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.upsList);
+    return initWidget(context, widget.generatorList);
   }
 
-  Widget initWidget(
-      BuildContext context, List<UpsKind> generatorList) {
+  Widget initWidget(BuildContext context, List<GeneratorKind> generatorList) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
         children: [
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
@@ -47,15 +44,13 @@ class _UpsList extends State<UpsList> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, UpsKind upsList) {
+Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UpsPage()));
-      },
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => GeneratorPage()));
+    },
     child: Container(
       height: 115,
       // width: size.width,
@@ -64,19 +59,18 @@ Widget demoTopRatedDr(BuildContext context, UpsKind upsList) {
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: _buildRow(context, upsList),
-
+      child: _buildRow(context, generatorList),
     ),
   );
 }
 
-Widget _buildRow(BuildContext context, UpsKind upsList) {
+Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
   return Container(
     padding: const EdgeInsets.all(16),
     child: Row(
       children: <Widget>[
         Image.asset(
-          "image/power-source.png",
+          "image/electric-generator.png",
           width: 80,
           height: 80,
         ),
@@ -89,13 +83,14 @@ Widget _buildRow(BuildContext context, UpsKind upsList) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  
                   Column(
                     children: <Widget>[
-                      Text(upsList.name, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                      Text(generatorList.name,
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 17)),
                     ],
                   ),
-    
                 ],
               ),
               // OutlineButton(

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Future<void> amain() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -19,7 +20,6 @@ Future<void> amain() async {
     MaterialApp(
       theme: ThemeData.dark(),
       home: TakePictureScreen(
-        
         // Pass the appropriate camera to the TakePictureScreen widget.
         camera: firstCamera,
       ),
@@ -70,7 +70,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(''),backgroundColor: Colors.black,),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -80,53 +79,58 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         ),
         child: Column(
           children: [
-            FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // If the Future is complete, display the preview.
-                  return CameraPreview(_controller);
-                } else {
-                  // Otherwise, display a loading indicator.
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-              
+            Expanded(
+              child: FutureBuilder<void>(
+                future: _initializeControllerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    // If the Future is complete, display the preview.
+                    return CameraPreview(_controller);
+                  } else {
+                    // Otherwise, display a loading indicator.
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
             ),
-
-            Expanded(child: const SizedBox(height:1)),
+            SizedBox(
+              height: 10,
+            ),
             Container(
-              height: 90,
-              width: 90,
+              height: 55,
+              width: 70,
               child: FloatingActionButton(
-                
-          // Provide an onPressed callback.
-          onPressed: () async {
-              // Take the Picture in a try / catch block. If anything goes wrong,
-              // catch the error.
-              try {
-                // Ensure that the camera is initialized.
-                await _initializeControllerFuture;
+                // Provide an onPressed callback.
+                onPressed: () async {
+                  // Take the Picture in a try / catch block. If anything goes wrong,
+                  // catch the error.
+                  try {
+                    // Ensure that the camera is initialized.
+                    await _initializeControllerFuture;
 
-                // Attempt to take a picture and get the file `image`
-                // where it was saved.
-                XFile image = await _controller.takePicture();
-                Navigator.pop(context, image);
-                // If the picture was taken, display it on a new screen.
-                
-              } catch (e) {
-                // If an error occurs, log the error to the console.
-                print(e);
-              }
-          },
-          child: const Icon(Icons.camera_alt,size: 50,),
-        ),
+                    // Attempt to take a picture and get the file `image`
+                    // where it was saved.
+                    XFile image = await _controller.takePicture();
+                    Navigator.pop(context, image);
+                    // If the picture was taken, display it on a new screen.
+
+                  } catch (e) {
+                    // If an error occurs, log the error to the console.
+                    print(e);
+                  }
+                },
+                child: const Icon(
+                  Icons.camera_alt,
+                  size: 30,
+                ),
+              ),
             ),
-        SizedBox(height: 30),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),
-      
     );
   }
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
-import 'package:istakip/Generator.dart';
-import 'package:istakip/GeneratorList.dart';
-import 'ChillerList.dart';
+import 'package:istakip/Routines/Generator.dart';
+import 'package:istakip/Routines/GeneratorList.dart';
+import 'Routines/ChillerList.dart';
 import 'DbHelper.dart';
-import 'Detail.dart';
-import 'HeaterList.dart';
-import 'UpsList.dart';
+import 'Routines/HeaterList.dart';
+import 'Routines/UpsList.dart';
 
 class CategoryRoutine extends StatefulWidget {
   final List<String> routines;
@@ -28,21 +27,23 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
   }
 
   Widget initWidget(
-      
       BuildContext context, List<String> routines, List<String> images) {
     //Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
         children: [
-          SizedBox(height: 50,),
+          SizedBox(
+            height: 50,
+          ),
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
               child: ListView.builder(
                   itemCount: routines.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, routines[index], images[index], index);
+                    return demoTopRatedDr(
+                        context, routines[index], images[index], index);
                   }),
             ),
           ),
@@ -52,7 +53,8 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
   }
 }
 
-Widget demoTopRatedDr(BuildContext context, String routine, String image, int index) {
+Widget demoTopRatedDr(
+    BuildContext context, String routine, String image, int index) {
   var size = MediaQuery.of(context).size;
   List<GeneratorKind> generatorKinds = DbHelper().GeneratorKinds();
   List<UpsKind> upsKinds = DbHelper().UpsKinds();
@@ -60,29 +62,35 @@ Widget demoTopRatedDr(BuildContext context, String routine, String image, int in
   List<HeaterKind> heaterKinds = DbHelper().HeaterKinds();
   return GestureDetector(
     onTap: () {
-
       if (routine == "Jenerator") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GeneratorList(generatorList: generatorKinds,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GeneratorList(
+                      generatorList: generatorKinds,
+                    )));
       } else if (routine == "UPS") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => UpsList(upsList: upsKinds,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UpsList(
+                      upsList: upsKinds,
+                    )));
       } else if (routine == "Chiller") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChillerList(chillerList: chillerKinds,)));
-      } 
-      else if (routine == "Isıtma") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HeaterList(heaterList: heaterKinds,)));
-      } 
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChillerList(
+                      chillerList: chillerKinds,
+                    )));
+      } else if (routine == "Isıtma") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HeaterList(
+                      heaterList: heaterKinds,
+                    )));
+      }
     },
     child: Container(
       height: 115,
@@ -93,13 +101,11 @@ Widget demoTopRatedDr(BuildContext context, String routine, String image, int in
         borderRadius: BorderRadius.circular(5),
       ),
       child: _buildRow(context, routine, image),
-
     ),
   );
 }
 
 Widget _buildRow(BuildContext context, String routine, String image) {
-  
   return Container(
     padding: const EdgeInsets.all(16),
     child: Row(
@@ -118,13 +124,14 @@ Widget _buildRow(BuildContext context, String routine, String image) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  
                   Column(
                     children: <Widget>[
-                      Text(routine, style: TextStyle(color: Color.fromARGB(255, 0, 0, 0),fontSize: 17)),
+                      Text(routine,
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 17)),
                     ],
                   ),
-    
                 ],
               ),
               // OutlineButton(

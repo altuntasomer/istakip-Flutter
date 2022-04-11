@@ -1,25 +1,26 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:istakip/DbHelper.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
-class NewJob extends StatefulWidget {
-  const NewJob({Key? key}) : super(key: key);
+class ShowJob extends StatefulWidget {
+  final job;
+  const ShowJob({Key? key, this.job}) : super(key: key);
 
   @override
-  State<NewJob> createState() => _NewJobState();
+  State<ShowJob> createState() => _ShowJobState();
 }
 
-class _NewJobState extends State<NewJob> {
+class _ShowJobState extends State<ShowJob> {
   List<XFile> photos = [];
   @override
   Widget build(BuildContext context) {
-    return initScreen();
+    return initScreen(context, widget.job);
   }
 
-  Widget initScreen() {
+  Widget initScreen(BuildContext context, Job job) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -53,12 +54,13 @@ class _NewJobState extends State<NewJob> {
                 height: 40,
               ),
               TextField(
+                enabled: false,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.place,
                       color: Color(0xff107163),
                     ),
-                    labelText: "Mahal Adı",
+                    labelText: job.place,
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -69,13 +71,14 @@ class _NewJobState extends State<NewJob> {
                 ),
               ),
               TextField(
+                enabled: false,
                 obscureText: false,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.description_outlined,
                       color: Color(0xff107163),
                     ),
-                    labelText: "Açıklama",
+                    labelText: job.description,
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -86,6 +89,7 @@ class _NewJobState extends State<NewJob> {
                 ),
               ),
               TextField(
+                enabled: false,
                 obscureText: false,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
@@ -93,7 +97,7 @@ class _NewJobState extends State<NewJob> {
                       Icons.alarm,
                       color: Color(0xff107163),
                     ),
-                    labelText: "İş Süresi",
+                    labelText: job.time,
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -106,45 +110,6 @@ class _NewJobState extends State<NewJob> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 60,
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      final cameras = await availableCameras();
-                      final firstCamera = cameras.first;
-
-                      XFile path = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  TakePictureScreen(camera: firstCamera)));
-                      photos.add(path);
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      child: Image.asset("image/add-photo.png"),
-                    ),
-                  ),
-                  Expanded(child: SizedBox()),
-                  GestureDetector(
-                    child: Icon(
-                      Icons.save,
-                      size: 60,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 60,
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
             ],
           ),
         ),

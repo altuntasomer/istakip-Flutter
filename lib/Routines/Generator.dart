@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
-class ChillerPage extends StatefulWidget {
-  const ChillerPage({Key? key}) : super(key: key);
+class GeneratorPage extends StatefulWidget {
+  const GeneratorPage({Key? key}) : super(key: key);
 
   @override
-  State<ChillerPage> createState() => ChillerPageState();
+  State<GeneratorPage> createState() => _GeneratorPageState();
 }
 
-class ChillerPageState extends State<ChillerPage> {
+class _GeneratorPageState extends State<GeneratorPage> {
   List<XFile> photos = [];
   var oilcontrol = false;
   var watercontrol = false;
@@ -40,7 +40,7 @@ class ChillerPageState extends State<ChillerPage> {
                 height: 60,
               ),
               Container(
-                height: 520,
+                height: photos.length > 0 ? 400 : 0,
                 margin: EdgeInsets.only(left: 20),
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -55,12 +55,151 @@ class ChillerPageState extends State<ChillerPage> {
               SizedBox(
                 height: 40,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 90,
+                  ),
+                  Text("Yakıt Seviyesi"),
+                  Expanded(child: SizedBox()),
+                  DropdownButton<String>(
+                    value: dropdownFuel2,
+                    //icon: const Icon(Icons.thumb_down_alt),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                    ),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownFuel2 = newValue!;
+                      });
+                    },
+                    items: fuel.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    width: 90,
+                  ),
+                ],
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 90,
+                  ),
+                  Text("Yedek Depo Seviyesi"),
+                  Expanded(child: SizedBox()),
+                  DropdownButton<String>(
+                    value: dropdownFuel,
+                    //icon: const Icon(Icons.thumb_down_alt),
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                    ),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownFuel = newValue!;
+                      });
+                    },
+                    items: fuel.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(
+                    width: 90,
+                  ),
+                ],
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 90,
+                  ),
+                  Text("Soğutma Suyu Kontrolü"),
+                  Expanded(
+                    child: SizedBox(),
+                  ),
+                  Checkbox(
+                    value: watercontrol,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        watercontrol = value!;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 90,
+                  ),
+                ],
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 90,
+                  ),
+                  Text("Yağ Kontrolü"),
+                  Expanded(
+                    child: SizedBox(),
+                  ),
+                  Checkbox(
+                    value: oilcontrol,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        oilcontrol = value!;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 90,
+                  ),
+                ],
+              ),
+              Container(
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
               TextField(
-                obscureText: false,
-                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                    
-                    labelText: "Gaz Basıncı (Bar)",
+                    icon: const Icon(
+                      Icons.place,
+                      color: Color(0xff107163),
+                    ),
+                    labelText: "Jeneratör gücü",
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -75,10 +214,10 @@ class ChillerPageState extends State<ChillerPage> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
-                      Icons.compress,
+                      Icons.alarm,
                       color: Color(0xff107163),
                     ),
-                    labelText: "Su Basıncı (Bar)",
+                    labelText: "Çalışma Saati",
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
@@ -88,27 +227,6 @@ class ChillerPageState extends State<ChillerPage> {
                   color: Colors.black,
                 ),
               ),
-              
-              
-              TextField(
-                obscureText: false,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    icon: const Icon(
-                      Icons.thermostat,
-                      color: Color(0xff107163),
-                    ),
-                    labelText: "Tesisat sıcaklığı (°C)",
-                    enabledBorder: InputBorder.none,
-                    labelStyle: const TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
-              ),
-              Container(
-                child: Divider(
-                  color: Colors.black,
-                ),
-              ),
-              
               TextField(
                 obscureText: false,
                 decoration: InputDecoration(
@@ -126,9 +244,6 @@ class ChillerPageState extends State<ChillerPage> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -139,7 +254,7 @@ class ChillerPageState extends State<ChillerPage> {
                     onTap: () async {
                       final cameras = await availableCameras();
                       final firstCamera = cameras.first;
-      
+
                       XFile path = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -178,21 +293,13 @@ class ChillerPageState extends State<ChillerPage> {
   Widget demoCategories(String image) {
     return GestureDetector(
       child: Container(
-        width: 320,
+        width: 300,
         margin: EdgeInsets.only(right: 15),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 89, 131, 125),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Image.file(File(image)),
-            ),
-          ],
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+                image: FileImage(File(image)), fit: BoxFit.fill)),
       ),
     );
   }

@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:istakip/Category.dart';
 import 'package:istakip/DbHelper.dart';
+import 'package:istakip/Login/LoginPage.dart';
+import 'package:istakip/Login/session.dart';
+import 'package:istakip/ShowJob.dart';
 import 'package:istakip/newJob.dart';
-import 'Detail.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  String userName = "";
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -18,33 +24,42 @@ class HomePageState extends State<HomePage> {
 
   Widget initScreen() {
     SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    SessionControl();
+
     List<String> categories = ["Jenerator", "UPS", "Chiller", "Isıtma"];
-    List<String> images = ["image/electric-generator.png","image/power-source.png","image/chillers.png","image/gas-heater.png"];
+    List<String> images = [
+      "image/electric-generator.png",
+      "image/power-source.png",
+      "image/chillers.png",
+      "image/gas-heater.png"
+    ];
     List<Job> jobs = DbHelper().Jobs();
-    
+
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.green,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.green,
         //centerTitle: true,
-        
+        automaticallyImplyLeading: false,
         actions: [
-
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Ömer ALTUNTAŞ",style: TextStyle(fontSize: 22),),
+              Text(
+                userName,
+                style: TextStyle(fontSize: 22),
+              ),
             ],
           ),
           SizedBox(
             width: 30,
           ),
-          
         ],
       ),
       body: Container(
@@ -68,12 +83,11 @@ class HomePageState extends State<HomePage> {
             Container(
               width: size.width,
               margin: EdgeInsets.only(left: 20),
-              
             ),
             Container(
               height: 60,
               margin: EdgeInsets.only(left: 20),
-              child: demoCategories(categories,images),
+              child: demoCategories(categories, images),
             ),
             Container(
               width: size.width,
@@ -110,10 +124,8 @@ class HomePageState extends State<HomePage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NewJob()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => NewJob()));
                   },
                   child: Column(
                     children: [
@@ -136,21 +148,25 @@ class HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            SizedBox(height: 5,)
+            SizedBox(
+              height: 5,
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget demoCategories(List<String> categories,List<String> images) {
+  Widget demoCategories(List<String> categories, List<String> images) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => CategoryRoutine(
-                    routines: categories, images: images,)));
+                      routines: categories,
+                      images: images,
+                    )));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -188,7 +204,7 @@ class HomePageState extends State<HomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DoctorDetailPage(
+                builder: (context) => ShowJob(
                       job: job,
                     )));
       },
@@ -255,7 +271,6 @@ class HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
-                              
                             ],
                           ),
                         )
@@ -269,5 +284,25 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  SessionControl() async {
+    String content = "";
+
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/session.txt');
+    content = await file.readAsString();
+
+    if (content.length < 3) {
+      print("homepage");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
+    var lines = content.split(':');
+    setState(() {
+      userName = lines[1];
+    });
+
+    return content;
   }
 }
