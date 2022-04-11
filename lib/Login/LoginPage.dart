@@ -26,7 +26,9 @@ class LoginPage extends StatelessWidget {
             onPressed: () {
               //password kontrolu olacak
               if (_passwordController.text == '123') {
-                writeToFile(context, "melih:546");
+                writeToFile(context, "546:melih");
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
               }
             },
             child: Text('Giriş Yap'),
@@ -38,12 +40,11 @@ class LoginPage extends StatelessWidget {
 
   writeToFile(BuildContext context, String password) async {
     try {
+      print("write to file girdi");
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/session.txt');
       await file.writeAsString(password);
       print("**************lgin page");
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {
       print(e);
     }

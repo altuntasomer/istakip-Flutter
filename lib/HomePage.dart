@@ -297,12 +297,14 @@ class HomePageState extends State<HomePage> {
       print("homepage");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
-    }
-    var lines = content.split(':');
-    setState(() {
-      userName = lines[1];
-    });
+    } else {
+      print("else");
+      var lines = content.split(':');
+      setState(() {
+        userName = lines[1];
+      });
 
-    return content;
+      return content;
+    }
   }
 }
