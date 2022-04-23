@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 class DbHelper {
 
   List<Job> Jobs() {
@@ -60,6 +62,21 @@ class DbHelper {
 
     return [kind1, kind2, kind3, kind4];
   }
+
+  Future<Notify> fetchNotify() async{
+    print("c");
+    final response = await http.get(Uri.parse("http://192.168.1.113:8000/api/notifications"));
+
+    if (response.statusCode == 200) {
+      print("a");
+      return Notify.fromJson(json.decode(response.body));
+    } else {
+      print("b");
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+ 
 }
 
 
@@ -226,4 +243,27 @@ class User {
       this.department,
       this.phone,
       this.image);
+}
+
+class Notify{
+  late int id;
+  late String description;
+  late String date;
+
+  Notify({required this.id, required this.description, required this.date});
+
+  factory Notify.fromJson(Map<String, dynamic> json) => Notify(
+    id: json["id"],
+    description: json["description"],
+    date: json["date"],
+  );
+}
+
+class Document{
+  late String id;
+  late String name;
+  late String path;
+
+  Document({required this.id, required this.name, required this.path});
+  
 }

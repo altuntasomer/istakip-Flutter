@@ -25,7 +25,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xff107163),
+      backgroundColor:Color.fromARGB(255, 94, 161, 182),
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(

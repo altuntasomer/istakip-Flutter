@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:istakip/Category.dart';
 import 'package:istakip/DbHelper.dart';
+import 'package:istakip/Documents.dart';
 import 'package:istakip/Login/LoginPage.dart';
 import 'package:istakip/Login/session.dart';
 import 'package:istakip/ShowJob.dart';
 import 'package:istakip/newJob.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'Notifications.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +30,7 @@ class HomePageState extends State<HomePage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    SessionControl();
+    
 
     List<String> categories = ["Jenerator", "UPS", "Chiller", "Isıtma"];
     List<String> images = [
@@ -42,26 +45,6 @@ class HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Colors.green,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.green,
-        //centerTitle: true,
-        automaticallyImplyLeading: false,
-        actions: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                userName,
-                style: TextStyle(fontSize: 22),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 30,
-          ),
-        ],
-      ),
       body: Container(
         decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -71,14 +54,28 @@ class HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 30,
+            ),
+          
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                
                 SizedBox(
                   height: 150,
                   child: Image.asset("image/logo_tr.png"),
                 ),
               ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("YAPI VE TEKNİK İŞLER MÜDÜRLÜĞÜ", style: TextStyle(fontWeight: FontWeight.w700),),
+              ],
+            ),
+            SizedBox(
+              height: 20,
             ),
             Container(
               width: size.width,
@@ -97,7 +94,7 @@ class HomePageState extends State<HomePage> {
                 children: [
                   Container(
                     child: Text(
-                      'Son Eklenenler',
+                      'Yapılan İşler',
                       style: TextStyle(
                         color: Color(0xff363636),
                         fontSize: 20,
@@ -120,8 +117,19 @@ class HomePageState extends State<HomePage> {
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Documents()));
+                  },
+                  child: Icon(
+                    Icons.file_copy,
+                    color: Color.fromARGB(255, 94, 161, 182),
+                    size: 40,
+                  ),
+                ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
@@ -146,6 +154,16 @@ class HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Notifications())),
+                  child: Icon(
+                    Icons.notifications_active_outlined,
+                    color: Color.fromARGB(255, 94, 161, 182),
+                    size: 40,
+                  ),
+                ),
+                
               ],
             ),
             SizedBox(
