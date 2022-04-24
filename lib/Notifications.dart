@@ -9,7 +9,7 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  late Future<Notify> notifications;
+  late Future<List<Notify>> notifications;
   void initState() {
     super.initState();
     notifications = DbHelper().fetchNotify();
@@ -21,11 +21,15 @@ class _NotificationsState extends State<Notifications> {
 
     return Scaffold(
       body: Center(
-          child: FutureBuilder<Notify>(
+          child: FutureBuilder<List<Notify>>(
             future: notifications,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!.description);
+                return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return demoTopRatedDr(context, snapshot.data![index]);
+                    });
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }

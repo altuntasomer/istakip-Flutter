@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class DbHelper {
 
+
   List<Job> Jobs() {
     Job job = Job(
         "23.04.2020:12.24", "priz tamir edildi", "1", "E505", "1", "15", "1");
@@ -63,13 +64,25 @@ class DbHelper {
     return [kind1, kind2, kind3, kind4];
   }
 
-  Future<Notify> fetchNotify() async{
+  Future<List<Notify>> fetchNotify() async{
+    List<Notify> notifies = <Notify>[];
+
     print("c");
     final response = await http.get(Uri.parse("http://192.168.1.113:8000/api/notifications"));
 
     if (response.statusCode == 200) {
-      print("a");
-      return Notify.fromJson(json.decode(response.body));
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            notifies.add(Notify.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return notifies;
     } else {
       print("b");
       throw Exception('Failed to load Notify');
