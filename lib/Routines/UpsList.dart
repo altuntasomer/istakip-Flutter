@@ -5,22 +5,24 @@ import 'package:istakip/Routines/Generator.dart';
 import 'Ups.dart';
 
 class UpsList extends StatefulWidget {
-  final List<UpsKind> upsList;
 
-  const UpsList({Key? key, required this.upsList}) : super(key: key);
+  const UpsList({Key? key}) : super(key: key);
 
   @override
   State<UpsList> createState() => _UpsList();
 }
 
 class _UpsList extends State<UpsList> {
+  late Future<List<UpsKind>> upsKinds;
+
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.upsList);
+    return initWidget(context,);
   }
 
-  Widget initWidget(BuildContext context, List<UpsKind> generatorList) {
+  Widget initWidget(BuildContext context,) {
     //Size size = MediaQuery.of(context).size;
+    upsKinds = DbHelper().fetchUpsKind();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
@@ -31,20 +33,28 @@ class _UpsList extends State<UpsList> {
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
-              child: ListView.builder(
-                  itemCount: generatorList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, generatorList[index]);
-                  }),
+              child: FutureBuilder<List<UpsKind>>(
+                future: upsKinds,
+                builder: (context,snapshot) {
+                  if(snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return demoTopRatedDr(context, snapshot.data![index]);
+                        });
+                  } else if(snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return CircularProgressIndicator();
+                }
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Widget demoTopRatedDr(BuildContext context, UpsKind upsList) {
+  Widget demoTopRatedDr(BuildContext context, UpsKind upsList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
@@ -108,3 +118,6 @@ Widget _buildRow(BuildContext context, UpsKind upsList) {
     ),
   );
 }
+
+}
+

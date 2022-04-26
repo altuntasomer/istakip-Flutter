@@ -6,22 +6,24 @@ import 'Chiller.dart';
 import 'Ups.dart';
 
 class ChillerList extends StatefulWidget {
-  final List<ChillerKind> chillerList;
+  
 
-  const ChillerList({Key? key, required this.chillerList}) : super(key: key);
+  const ChillerList({Key? key,}) : super(key: key);
 
   @override
   State<ChillerList> createState() => _ChillerList();
 }
 
 class _ChillerList extends State<ChillerList> {
+  late Future<List<ChillerKind>> chillerKinds;
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.chillerList);
+    return initWidget(context, );
   }
 
-  Widget initWidget(BuildContext context, List<ChillerKind> chillerList) {
+  Widget initWidget(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
+    chillerKinds = DbHelper().fetchChillerKind();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
@@ -32,20 +34,28 @@ class _ChillerList extends State<ChillerList> {
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
-              child: ListView.builder(
-                  itemCount: chillerList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, chillerList[index]);
-                  }),
+              child: FutureBuilder<List<ChillerKind>>(
+                future: chillerKinds,
+                builder: (context,snapshot) {
+                  if(snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return demoTopRatedDr(context, snapshot.data![index]);
+                        });
+                  } else if(snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return CircularProgressIndicator();
+                }
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Widget demoTopRatedDr(BuildContext context, ChillerKind chillerList) {
+  Widget demoTopRatedDr(BuildContext context, ChillerKind chillerList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
@@ -109,3 +119,6 @@ Widget _buildRow(BuildContext context, ChillerKind chillerList) {
     ),
   );
 }
+
+}
+

@@ -21,6 +21,8 @@ class CategoryRoutine extends StatefulWidget {
 }
 
 class _CategoryRoutineState extends State<CategoryRoutine> {
+  
+
   @override
   Widget build(BuildContext context) {
     return initWidget(context, widget.routines, widget.images);
@@ -51,15 +53,10 @@ class _CategoryRoutineState extends State<CategoryRoutine> {
       ),
     );
   }
-}
-
-Widget demoTopRatedDr(
+  Widget demoTopRatedDr(
     BuildContext context, String routine, String image, int index) {
   var size = MediaQuery.of(context).size;
-  List<GeneratorKind> generatorKinds = DbHelper().GeneratorKinds();
-  List<UpsKind> upsKinds = DbHelper().UpsKinds();
-  List<ChillerKind> chillerKinds = DbHelper().ChillerKinds();
-  List<HeaterKind> heaterKinds = DbHelper().HeaterKinds();
+  
   return GestureDetector(
     onTap: () {
       if (routine == "Jenerator") {
@@ -67,28 +64,28 @@ Widget demoTopRatedDr(
             context,
             MaterialPageRoute(
                 builder: (context) => GeneratorList(
-                      generatorList: generatorKinds,
+                      
                     )));
       } else if (routine == "UPS") {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => UpsList(
-                      upsList: upsKinds,
+                      
                     )));
       } else if (routine == "Chiller") {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ChillerList(
-                      chillerList: chillerKinds,
+                      
                     )));
       } else if (routine == "Isıtma") {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => HeaterList(
-                      heaterList: heaterKinds,
+                      
                     )));
       }
     },
@@ -149,3 +146,6 @@ Widget _buildRow(BuildContext context, String routine, String image) {
     ),
   );
 }
+}
+
+

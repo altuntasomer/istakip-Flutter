@@ -4,71 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class DbHelper {
 
-
-  List<Job> Jobs() {
-    Job job = Job(
-        "23.04.2020:12.24", "priz tamir edildi", "1", "E505", "1", "15", "1");
-    Job job2 = Job(
-        "22.04.2020:09.45", "ampul değiştirildi", "2", "E502", "1", "20", "1");
-    Job job3 = Job("21.04.2020:11.15", "jeneratör arızası giderildi", "3",
-        "E503", "1", "10", "1");
-    Job job4 =
-        Job("20.04.2020:08.41", "santral arızası", "4", "E504", "1", "35", "1");
-    Job job5 = Job(
-        "23.04.2020:15.25", "bayrak değiştirildi", "5", "E508", "1", "25", "1");
-    List<Job> jobs = List<Job>.filled(5, job);
-    jobs[0] = job;
-    jobs[1] = job2;
-    jobs[2] = job3;
-    jobs[3] = job4;
-    jobs[4] = job5;
-    return jobs;
-  }
-  List<GeneratorKind> GeneratorKinds()
-  {
-    
-    GeneratorKind kind1 = GeneratorKind("1", "150 KVA", "Küçükyalı");
-    GeneratorKind kind2 = GeneratorKind("2", "630 KVA", "Küçükyalı");
-    GeneratorKind kind3 = GeneratorKind("3", "1100 KVA", "Küçükyalı");
-    GeneratorKind kind4 = GeneratorKind("4", "900 KVA", "Sütlüce");
-
-    return [kind1, kind2, kind3, kind4];
-  }
-
-  List<UpsKind> UpsKinds()
-  {
-    UpsKind kind1 = UpsKind("1", "80 KVA", "Küçükyalı");
-    UpsKind kind2 = UpsKind("2", "100 KVA", "Küçükyalı");
-    UpsKind kind3 = UpsKind("3", "10 KVA", "Küçükyalı");
-    UpsKind kind4 = UpsKind("4", "80 KVA", "Sütlüce");
-
-    return [kind1, kind2, kind3, kind4];
-  }
-
-  List<ChillerKind> ChillerKinds()
-  {
-    ChillerKind kind1 = ChillerKind("1", "A BLOK 1 NO'LU CHİLLER", "Küçükyalı");
-    ChillerKind kind2 = ChillerKind("2", "A BLOK 2 NO'LU CHİLLER", "Küçükyalı");
-    ChillerKind kind3 = ChillerKind("3", "B BLOK CHİLLER", "Küçükyalı");
-    ChillerKind kind4 = ChillerKind("4", "C BLOK CHİLLER", "Sütlüce");
-
-    return [kind1, kind2, kind3, kind4];
-  }
-  List<HeaterKind> HeaterKinds()
-  {
-    HeaterKind kind1 = HeaterKind("1", "A BLOK 1 NO'LU KAZAN DAİRESİ", "Küçükyalı");
-    HeaterKind kind2 = HeaterKind("2", "A BLOK 2 NO'LU KAZAN DAİRESİ", "Küçükyalı");
-    HeaterKind kind3 = HeaterKind("3", "B BLOK BOYLER", "Küçükyalı");
-    HeaterKind kind4 = HeaterKind("4", "A BLOK BOYLER", "Sütlüce");
-
-    return [kind1, kind2, kind3, kind4];
-  }
+  static const String url = 'http://192.168.1.113';
+  
 
   Future<List<Notify>> fetchNotify() async{
     List<Notify> notifies = <Notify>[];
 
-    print("c");
-    final response = await http.get(Uri.parse("http://192.168.1.113:8000/api/notifications"));
+    
+    final response = await http.get(Uri.parse("$url:8000/api/notifications"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -84,26 +27,160 @@ class DbHelper {
       }
       return notifies;
     } else {
+      
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<Job>> fetchJob() async{
+    List<Job> jobs = <Job>[];
+
+    
+    final response = await http.get(Uri.parse("$url:8000/api/jobs"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            jobs.add(Job.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return jobs;
+    } else {
       print("b");
       throw Exception('Failed to load Notify');
     }
   }
 
+  Future<List<GeneratorKind>> fetchGeneratorKind() async{
+    List<GeneratorKind> notifies = <GeneratorKind>[];
+
+    
+    final response = await http.get(Uri.parse("$url:8000/api/generatorKinds"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            notifies.add(GeneratorKind.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return notifies;
+    } else {
+      
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<UpsKind>> fetchUpsKind() async{
+    List<UpsKind> notifies = <UpsKind>[];
+
+    
+    final response = await http.get(Uri.parse("$url:8000/api/upsKinds"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            notifies.add(UpsKind.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return notifies;
+    } else {
+      
+      throw Exception('Failed to load Notify');
+    }
+  }  
  
+ Future<List<ChillerKind>> fetchChillerKind() async{
+    List<ChillerKind> notifies = <ChillerKind>[];
+
+    
+    final response = await http.get(Uri.parse("$url:8000/api/chillerKinds"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            notifies.add(ChillerKind.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return notifies;
+    } else {
+      
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<HeaterKind>> fetchHeaterKind() async{
+    List<HeaterKind> notifies = <HeaterKind>[];
+
+    
+    final response = await http.get(Uri.parse("$url:8000/api/heaterKinds"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values=<dynamic>[];
+      values = json.decode(response.body);
+      if(values.length>0){
+        for(int i=0;i<values.length;i++){
+          if(values[i]!=null){
+            Map<String,dynamic> map=values[i];
+            notifies.add(HeaterKind.fromJson(map));
+            debugPrint('Id-------${map['id']}');
+          }
+        }
+      }
+      return notifies;
+    } else {
+      
+      throw Exception('Failed to load Notify');
+    }
+  }
 }
 
 
 class Job {
   late String date;
   late String description;
-  late String id;
+  late int id;
   late String place;
   late String status;
   late String time;
-  late String user_id;
+  late int user_id;
 
   Job(this.date, this.description, this.id, this.place, this.status, this.time,
       this.user_id);
+
+  factory Job.fromJson(Map<String, dynamic> json) => Job(
+    
+        json["date"],
+        json["description"],
+        json["id"],
+        json["place"],
+        json["status"],
+        json["time"],
+        json["user_id"],
+      );
 }
 
 class Generator {
@@ -134,9 +211,15 @@ class Generator {
 }
 
 class GeneratorKind {
-  late String id;
+  late int id;
   late String name;
   late String campus;
+
+  factory GeneratorKind.fromJson(Map<String, dynamic> json) => GeneratorKind(
+        json["id"],
+        json["name"],
+        json["campus"],
+      );
 
   GeneratorKind(this.id, this.name, this.campus);
 }
@@ -158,9 +241,15 @@ class Ups {
 }
 
 class UpsKind {
-  late String id;
+  late int id;
   late String name;
   late String campus;
+
+  factory UpsKind.fromJson(Map<String, dynamic> json) => UpsKind(
+        json["id"],
+        json["name"],
+        json["campus"],
+      );
 
   UpsKind(this.id, this.name, this.campus);
 }
@@ -191,9 +280,15 @@ class Chiller {
 }
 
 class ChillerKind {
-  late String id;
+  late int id;
   late String name;
   late String campus;
+
+  factory ChillerKind.fromJson(Map<String, dynamic> json) => ChillerKind(
+        json["id"],
+        json["name"],
+        json["campus"],
+      );
 
   ChillerKind(this.id, this.name, this.campus);
 }
@@ -226,9 +321,15 @@ class Heater {
 }
 
 class HeaterKind {
-  late String id;
+  late int id;
   late String name;
   late String campus;
+
+  factory HeaterKind.fromJson(Map<String, dynamic> json) => HeaterKind(
+        json["id"],
+        json["name"],
+        json["campus"],
+      );
 
   HeaterKind(this.id, this.name, this.campus);
 }

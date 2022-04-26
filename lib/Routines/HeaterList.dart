@@ -7,22 +7,24 @@ import 'Heater.dart';
 import 'Ups.dart';
 
 class HeaterList extends StatefulWidget {
-  final List<HeaterKind> heaterList;
 
-  const HeaterList({Key? key, required this.heaterList}) : super(key: key);
+
+  const HeaterList({Key? key, }) : super(key: key);
 
   @override
   State<HeaterList> createState() => _HeaterList();
 }
 
 class _HeaterList extends State<HeaterList> {
+  late Future<List<HeaterKind>> heaterKinds;
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.heaterList);
+    return initWidget(context, );
   }
 
-  Widget initWidget(BuildContext context, List<HeaterKind> heaterList) {
+  Widget initWidget(BuildContext context, ) {
     //Size size = MediaQuery.of(context).size;
+    heaterKinds = DbHelper().fetchHeaterKind();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
@@ -33,20 +35,28 @@ class _HeaterList extends State<HeaterList> {
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
-              child: ListView.builder(
-                  itemCount: heaterList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, heaterList[index]);
-                  }),
+              child: FutureBuilder<List<HeaterKind>>(
+                future: heaterKinds,
+                builder: (context,snapshot) {
+                  if(snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return demoTopRatedDr(context, snapshot.data![index]);
+                        });
+                  } else if(snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return CircularProgressIndicator();
+                }
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Widget demoTopRatedDr(BuildContext context, HeaterKind heaterList) {
+  Widget demoTopRatedDr(BuildContext context, HeaterKind heaterList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
@@ -110,3 +120,6 @@ Widget _buildRow(BuildContext context, HeaterKind heaterList) {
     ),
   );
 }
+
+}
+

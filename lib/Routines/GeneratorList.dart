@@ -4,9 +4,8 @@ import 'package:istakip/DbHelper.dart';
 import 'package:istakip/Routines/Generator.dart';
 
 class GeneratorList extends StatefulWidget {
-  final List<GeneratorKind> generatorList;
 
-  const GeneratorList({Key? key, required this.generatorList})
+  const GeneratorList({Key? key, })
       : super(key: key);
 
   @override
@@ -14,13 +13,16 @@ class GeneratorList extends StatefulWidget {
 }
 
 class _GeneratorList extends State<GeneratorList> {
+    late Future<List<GeneratorKind>> generatorKinds;
+
   @override
   Widget build(BuildContext context) {
-    return initWidget(context, widget.generatorList);
+    return initWidget(context,);
   }
 
-  Widget initWidget(BuildContext context, List<GeneratorKind> generatorList) {
+  Widget initWidget(BuildContext context,) {
     //Size size = MediaQuery.of(context).size;
+    generatorKinds = DbHelper().fetchGeneratorKind();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(
@@ -31,20 +33,28 @@ class _GeneratorList extends State<GeneratorList> {
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 20, right: 20),
-              child: ListView.builder(
-                  itemCount: generatorList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return demoTopRatedDr(context, generatorList[index]);
-                  }),
+              child: FutureBuilder<List<GeneratorKind>>(
+                future: generatorKinds,
+                builder: (context,snapshot) {
+                  if(snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return demoTopRatedDr(context, snapshot.data![index]);
+                        });
+                  } else if(snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return CircularProgressIndicator();
+                }
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
+  Widget demoTopRatedDr(BuildContext context, GeneratorKind generatorList) {
   var size = MediaQuery.of(context).size;
   return GestureDetector(
     onTap: () {
@@ -108,3 +118,6 @@ Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
     ),
   );
 }
+
+}
+

@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   String userName = "";
+  late Future<List<Job>> jobs;
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -39,7 +40,8 @@ class HomePageState extends State<HomePage> {
       "image/chillers.png",
       "image/gas-heater.png"
     ];
-    List<Job> jobs = DbHelper().Jobs();
+    jobs = DbHelper().fetchJob();
+    
 
     Size size = MediaQuery.of(context).size;
 
@@ -109,11 +111,23 @@ class HomePageState extends State<HomePage> {
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20),
-                child: ListView.builder(
-                    itemCount: jobs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return demoTopRatedDr(context, jobs[index]);
-                    }),
+                child: FutureBuilder<List<Job>>(
+                  future: jobs,
+                  builder: (context,snapshot){
+                    if(snapshot.hasData){
+                      return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return demoTopRatedDr(context, snapshot.data![index]);
+                      });
+                    }
+                  
+                  else if(snapshot.hasError){
+                    return Text("${snapshot.error}");
+                  }
+                  return CircularProgressIndicator();
+                  }
+                ),
               ),
             ),
             Row(
