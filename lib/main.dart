@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:istakip/Login/LoginPage.dart';
-
+import 'globals.dart' as globals;
 import 'HomePage.dart';
 
 void main() {
+  
   runApp(MyApp());
 }
 

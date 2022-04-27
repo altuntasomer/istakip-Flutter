@@ -10,6 +10,7 @@ import 'package:istakip/Login/session.dart';
 import 'package:istakip/ShowJob.dart';
 import 'package:istakip/newJob.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Notifications.dart';
 import 'globals.dart' as globals;
 
@@ -31,6 +32,11 @@ class HomePageState extends State<HomePage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    if(globals.s == false)
+    {
+      SessionControl();
+      globals.s = true;
+    }
     
 
     List<String> categories = ["Jenerator", "UPS", "Chiller", "Isıtma"];
@@ -41,8 +47,7 @@ class HomePageState extends State<HomePage> {
       "image/gas-heater.png"
     ];
     jobs = DbHelper().fetchJob();
-    globals.username = "Hüseyin";
-    globals.id = 1;
+    
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -319,25 +324,23 @@ class HomePageState extends State<HomePage> {
   }
 
   SessionControl() async {
-    String content = "";
-
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}/session.txt');
-    content = await file.readAsString();
-
-    if (content.length < 3) {
-      print("homepage");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('username');
+    prefs.remove('userid');
+    String? username = prefs.getString('username');
+    int? userid = prefs.getInt('userid');
+    if (username == null) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
-    } else {
-      print("else");
-      var lines = content.split(':');
-      setState(() {
-        globals.username = lines[1];
-      });
-
-      return content;
     }
+    else{
+      globals.id = userid!;
+      globals.username = username;
+      setState(() {
+        
+      });
+    }
+    return "Success";
   }
 
   

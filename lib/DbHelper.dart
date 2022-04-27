@@ -6,6 +6,22 @@ class DbHelper {
 
   static const String url = 'http://192.168.1.113';
   
+  Future<User> fetchUser(String password) async {
+    final response = await http.get(Uri.parse('${url}:8000/api/userspass/${password}'),
+        headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return User(0,"","","");
+
+    }
+  }
 
   Future<List<Notify>> fetchNotify() async{
     List<Notify> notifies = <Notify>[];
@@ -15,7 +31,7 @@ class DbHelper {
   
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -36,11 +52,13 @@ class DbHelper {
     List<Job> jobs = <Job>[];
 
     
-    final response = await http.get(Uri.parse("${url}:8000/api/jobs"));
+    final response = await http.get(Uri.parse("${url}:8000/api/jobs"),headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },);
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -75,6 +93,8 @@ class DbHelper {
     );
   }
 
+
+
   Future<List<GeneratorKind>> fetchGeneratorKind() async{
     List<GeneratorKind> notifies = <GeneratorKind>[];
 
@@ -83,7 +103,7 @@ class DbHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -108,7 +128,7 @@ class DbHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -133,7 +153,7 @@ class DbHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -158,7 +178,7 @@ class DbHelper {
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
-      values = json.decode(response.body);
+      values = json.decode(utf8.decode(response.bodyBytes));
       if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
@@ -363,28 +383,24 @@ class HeaterKind {
 }
 
 class User {
-  late String id;
+  late int id;
   late String name;
-  late String surname;
-  late String email;
   late String password;
-  late String role;
   late String campus;
-  late String department;
-  late String phone;
-  late String image;
+  
 
   User(
       this.id,
       this.name,
-      this.surname,
-      this.email,
       this.password,
-      this.role,
       this.campus,
-      this.department,
-      this.phone,
-      this.image);
+      );
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        json["id"],
+        json["name"],
+        json["password"],
+        json["campus"],);
 }
 
 class Notify{
