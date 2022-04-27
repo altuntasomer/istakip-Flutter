@@ -76,6 +76,7 @@ class _UpsList extends State<UpsList> {
 
 Widget _buildRow(BuildContext context, UpsKind upsList) {
   return Container(
+    
     padding: const EdgeInsets.all(16),
     child: Row(
       children: <Widget>[

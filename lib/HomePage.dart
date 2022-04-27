@@ -10,8 +10,8 @@ import 'package:istakip/Login/session.dart';
 import 'package:istakip/ShowJob.dart';
 import 'package:istakip/newJob.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'Notifications.dart';
+import 'globals.dart' as globals;
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  String userName = "";
+  
   late Future<List<Job>> jobs;
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,8 @@ class HomePageState extends State<HomePage> {
       "image/gas-heater.png"
     ];
     jobs = DbHelper().fetchJob();
-    
-
+    globals.username = "Hüseyin";
+    globals.id = 1;
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -59,7 +59,7 @@ class HomePageState extends State<HomePage> {
             SizedBox(
               height: 30,
             ),
-          
+            Text(globals.username),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -333,10 +333,12 @@ class HomePageState extends State<HomePage> {
       print("else");
       var lines = content.split(':');
       setState(() {
-        userName = lines[1];
+        globals.username = lines[1];
       });
 
       return content;
     }
   }
+
+  
 }

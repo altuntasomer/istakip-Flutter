@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class DbHelper {
@@ -11,8 +11,8 @@ class DbHelper {
     List<Notify> notifies = <Notify>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/notifications"));
-
+    final response = await http.get(Uri.parse("${url}:8000/api/notifications"));
+  
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
       values = json.decode(response.body);
@@ -36,7 +36,7 @@ class DbHelper {
     List<Job> jobs = <Job>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/jobs"));
+    final response = await http.get(Uri.parse("${url}:8000/api/jobs"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -56,12 +56,30 @@ class DbHelper {
       throw Exception('Failed to load Notify');
     }
   }
+  newJob(Job job) async
+  {
+    
+    final response = await http.post(Uri.parse("${url}:8000/api/newJob/${globals.id}"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(
+      {
+        "description": job.description,
+        "place": job.place,
+        "status": job.status,
+        "time": job.time,
+        "user_id": job.userid,
+      }
+    ), 
+    );
+  }
 
   Future<List<GeneratorKind>> fetchGeneratorKind() async{
     List<GeneratorKind> notifies = <GeneratorKind>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/generatorKinds"));
+    final response = await http.get(Uri.parse("${url}:8000/api/generatorKinds"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -86,7 +104,7 @@ class DbHelper {
     List<UpsKind> notifies = <UpsKind>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/upsKinds"));
+    final response = await http.get(Uri.parse("${url}:8000/api/upsKinds"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -111,7 +129,7 @@ class DbHelper {
     List<ChillerKind> notifies = <ChillerKind>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/chillerKinds"));
+    final response = await http.get(Uri.parse("${url}:8000/api/chillerKinds"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -136,7 +154,7 @@ class DbHelper {
     List<HeaterKind> notifies = <HeaterKind>[];
 
     
-    final response = await http.get(Uri.parse("$url:8000/api/heaterKinds"));
+    final response = await http.get(Uri.parse("${url}:8000/api/heaterKinds"));
 
     if (response.statusCode == 200) {
       List<dynamic> values=<dynamic>[];
@@ -166,10 +184,10 @@ class Job {
   late String place;
   late String status;
   late String time;
-  late int user_id;
+  late int userid;
 
   Job(this.date, this.description, this.id, this.place, this.status, this.time,
-      this.user_id);
+      this.userid);
 
   factory Job.fromJson(Map<String, dynamic> json) => Job(
     
@@ -179,8 +197,18 @@ class Job {
         json["place"],
         json["status"],
         json["time"],
-        json["user_id"],
+        json["userid"],
       );
+
+  Map<String, dynamic> toJson() => {
+        
+        "description": description,
+        
+        "place": place,
+        "status": status,
+        "time": time,
+        "userid": userid,
+      };
 }
 
 class Generator {

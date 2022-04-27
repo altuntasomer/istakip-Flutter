@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
           TextField(
             controller: _passwordController,
             decoration: InputDecoration(
-              hintText: 'Şifre',
+              hintText: 'Kullanıcı Kodu',
             ),
           ),
           RaisedButton(

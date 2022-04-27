@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:istakip/DbHelper.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
+import 'package:http/http.dart' as http;
 
 class NewJob extends StatefulWidget {
   const NewJob({Key? key}) : super(key: key);
@@ -14,6 +16,9 @@ class NewJob extends StatefulWidget {
 
 class _NewJobState extends State<NewJob> {
   List<XFile> photos = [];
+  TextEditingController placeController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -43,9 +48,7 @@ class _NewJobState extends State<NewJob> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
+                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -62,6 +65,7 @@ class _NewJobState extends State<NewJob> {
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+                        controller: placeController,
               ),
               Container(
                 child: Divider(
@@ -77,8 +81,10 @@ class _NewJobState extends State<NewJob> {
                     ),
                     labelText: "Açıklama",
                     enabledBorder: InputBorder.none,
+                    
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+                        controller: descriptionController,
               ),
               Container(
                 child: Divider(
@@ -97,6 +103,7 @@ class _NewJobState extends State<NewJob> {
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
+                        controller: timeController,
               ),
               Container(
                 child: Divider(
@@ -133,6 +140,11 @@ class _NewJobState extends State<NewJob> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
+                    onTap: (){
+                      DbHelper().newJob(Job(
+                        "",descriptionController.text,1,placeController.text,"OK",timeController.text,1
+                      ));
+                    },
                     child: Icon(
                       Icons.save,
                       size: 60,
