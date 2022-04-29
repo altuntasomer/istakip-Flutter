@@ -39,6 +39,7 @@ dependencies:
   path:
   http:
   shared_preferences:
+  mime:
 
 dev_dependencies:
   flutter_test:

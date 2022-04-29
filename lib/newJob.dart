@@ -48,7 +48,6 @@ class _NewJobState extends State<NewJob> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -65,7 +64,7 @@ class _NewJobState extends State<NewJob> {
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
-                        controller: placeController,
+                controller: placeController,
               ),
               Container(
                 child: Divider(
@@ -81,10 +80,9 @@ class _NewJobState extends State<NewJob> {
                     ),
                     labelText: "Açıklama",
                     enabledBorder: InputBorder.none,
-                    
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
-                        controller: descriptionController,
+                controller: descriptionController,
               ),
               Container(
                 child: Divider(
@@ -103,7 +101,7 @@ class _NewJobState extends State<NewJob> {
                     enabledBorder: InputBorder.none,
                     labelStyle: const TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0), fontSize: 17)),
-                        controller: timeController,
+                controller: timeController,
               ),
               Container(
                 child: Divider(
@@ -140,10 +138,8 @@ class _NewJobState extends State<NewJob> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
-                    onTap: (){
-                      DbHelper().newJob(Job(
-                        "",descriptionController.text,1,placeController.text,"OK",timeController.text,1
-                      ));
+                    onTap: () async {
+                      DbHelper().postImage(photos);
                     },
                     child: Icon(
                       Icons.save,

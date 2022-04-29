@@ -9,7 +9,7 @@ import '../HomePage.dart';
 import 'package:istakip/globals.dart' as globals;
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({ Key? key }) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -22,8 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     return initScreen();
   }
 
-  Widget initScreen()
-  {
+  Widget initScreen() {
     return Scaffold(
       backgroundColor: Colors.green,
       body: Column(
@@ -31,11 +30,13 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           TextField(
             decoration: InputDecoration(
-              icon: const Icon(Icons.lock, color: Colors.white,),
+              icon: const Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
               labelText: 'Kullanıcı Kodu',
             ),
-                        controller: passwordController,
-
+            controller: passwordController,
           ),
           SizedBox(
             height: 20,
@@ -50,9 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 SessionWrite(context, user.name, user.id);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomePage()));
-              }
-              else
-              {
+              } else {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -77,12 +76,13 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-  
   }
+
   SessionWrite(BuildContext context, String username, int userid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setInt('userid', userid);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 }

@@ -1,16 +1,71 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
+
 import 'globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-class DbHelper {
+import 'package:mime/mime.dart';
 
-  static const String url = 'http://192.168.1.113';
-  
-  Future<User> fetchUser(String password) async {
-    final response = await http.get(Uri.parse('${url}:8000/api/userspass/${password}'),
+class DbHelper {
+  static const String url = 'http://192.168.1.59';
+
+  postImage(File imageFile) async {
+    String uploadurl = '$url/api/postImage';
+    //dont use http://localhost , because emulator don't get that address
+    //insted use your local IP address or use live URL
+    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
+
+    try {
+      List<int> imageBytes = imageFile.readAsBytesSync();
+      String baseimage = base64Encode(imageBytes);
+      //convert file image to Base64 encoding
+      var response = await http.post(Uri.parse(uploadurl), body: {
+        'image': baseimage,
+      });
+      if (response.statusCode == 200) {
+        var jsondata = json.decode(response.body); //decode json data
+        if (jsondata["error"]) {
+          //check error sent from server
+          print(jsondata["msg"]);
+          //if error return from server, show message from server
+        } else {
+          print("Upload successful");
+        }
+      } else {
+        print("Error during connection to server");
+        //there is error durin
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<Job> getLatestJob() async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getLatestJob/'),
         headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    });
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Job.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Job("", "", 0, "", "", "", 0);
+    }
+  }
+
+  Future<User> fetchUser(String password) async {
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/userspass/${password}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -18,184 +73,169 @@ class DbHelper {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return User(0,"","","");
-
+      return User(0, "", "", "");
     }
   }
 
-  Future<List<Notify>> fetchNotify() async{
+  Future<List<Notify>> fetchNotify() async {
     List<Notify> notifies = <Notify>[];
 
-    
     final response = await http.get(Uri.parse("${url}:8000/api/notifications"));
-  
+
     if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
+      List<dynamic> values = <dynamic>[];
       values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
             notifies.add(Notify.fromJson(map));
-            debugPrint('Id-------${map['id']}');
           }
         }
       }
       return notifies;
     } else {
-      
       throw Exception('Failed to load Notify');
     }
   }
 
-  Future<List<Job>> fetchJob() async{
+  Future<List<Job>> fetchJob() async {
     List<Job> jobs = <Job>[];
 
-    
-    final response = await http.get(Uri.parse("${url}:8000/api/jobs"),headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },);
+    final response = await http.get(
+      Uri.parse("${url}:8000/api/jobs"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
 
     if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
+      List<dynamic> values = <dynamic>[];
       values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
             jobs.add(Job.fromJson(map));
-            debugPrint('Id-------${map['id']}');
           }
         }
       }
       return jobs;
     } else {
-      print("b");
       throw Exception('Failed to load Notify');
     }
   }
-  newJob(Job job) async
-  {
-    
-    final response = await http.post(Uri.parse("${url}:8000/api/newJob/${globals.id}"),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(
-      {
+
+  newJob(Job job, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("${url}:8000/api/newJob/${globals.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
         "description": job.description,
         "place": job.place,
         "status": job.status,
         "time": job.time,
         "user_id": job.userid,
-      }
-    ), 
+      }),
     );
+    final snackBar = SnackBar(
+      content: const Text('İş kaydedildi'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.of(context).pop();
   }
 
-
-
-  Future<List<GeneratorKind>> fetchGeneratorKind() async{
+  Future<List<GeneratorKind>> fetchGeneratorKind() async {
     List<GeneratorKind> notifies = <GeneratorKind>[];
 
-    
-    final response = await http.get(Uri.parse("${url}:8000/api/generatorKinds"));
+    final response =
+        await http.get(Uri.parse("${url}:8000/api/generatorKinds"));
 
     if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
+      List<dynamic> values = <dynamic>[];
       values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
             notifies.add(GeneratorKind.fromJson(map));
-            debugPrint('Id-------${map['id']}');
           }
         }
       }
       return notifies;
     } else {
-      
       throw Exception('Failed to load Notify');
     }
   }
 
-  Future<List<UpsKind>> fetchUpsKind() async{
+  Future<List<UpsKind>> fetchUpsKind() async {
     List<UpsKind> notifies = <UpsKind>[];
 
-    
     final response = await http.get(Uri.parse("${url}:8000/api/upsKinds"));
 
     if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
+      List<dynamic> values = <dynamic>[];
       values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
             notifies.add(UpsKind.fromJson(map));
-            debugPrint('Id-------${map['id']}');
           }
         }
       }
       return notifies;
     } else {
-      
-      throw Exception('Failed to load Notify');
-    }
-  }  
- 
- Future<List<ChillerKind>> fetchChillerKind() async{
-    List<ChillerKind> notifies = <ChillerKind>[];
-
-    
-    final response = await http.get(Uri.parse("${url}:8000/api/chillerKinds"));
-
-    if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
-      values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
-            notifies.add(ChillerKind.fromJson(map));
-            debugPrint('Id-------${map['id']}');
-          }
-        }
-      }
-      return notifies;
-    } else {
-      
       throw Exception('Failed to load Notify');
     }
   }
 
-  Future<List<HeaterKind>> fetchHeaterKind() async{
-    List<HeaterKind> notifies = <HeaterKind>[];
+  Future<List<ChillerKind>> fetchChillerKind() async {
+    List<ChillerKind> notifies = <ChillerKind>[];
 
-    
-    final response = await http.get(Uri.parse("${url}:8000/api/heaterKinds"));
+    final response = await http.get(Uri.parse("${url}:8000/api/chillerKinds"));
 
     if (response.statusCode == 200) {
-      List<dynamic> values=<dynamic>[];
+      List<dynamic> values = <dynamic>[];
       values = json.decode(utf8.decode(response.bodyBytes));
-      if(values.length>0){
-        for(int i=0;i<values.length;i++){
-          if(values[i]!=null){
-            Map<String,dynamic> map=values[i];
-            notifies.add(HeaterKind.fromJson(map));
-            debugPrint('Id-------${map['id']}');
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            notifies.add(ChillerKind.fromJson(map));
           }
         }
       }
       return notifies;
     } else {
-      
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<HeaterKind>> fetchHeaterKind() async {
+    List<HeaterKind> notifies = <HeaterKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/heaterKinds"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            notifies.add(HeaterKind.fromJson(map));
+          }
+        }
+      }
+      return notifies;
+    } else {
       throw Exception('Failed to load Notify');
     }
   }
 }
-
 
 class Job {
   late String date;
@@ -210,7 +250,6 @@ class Job {
       this.userid);
 
   factory Job.fromJson(Map<String, dynamic> json) => Job(
-    
         json["date"],
         json["description"],
         json["id"],
@@ -221,9 +260,7 @@ class Job {
       );
 
   Map<String, dynamic> toJson() => {
-        
         "description": description,
-        
         "place": place,
         "status": status,
         "time": time,
@@ -387,23 +424,23 @@ class User {
   late String name;
   late String password;
   late String campus;
-  
 
   User(
-      this.id,
-      this.name,
-      this.password,
-      this.campus,
-      );
+    this.id,
+    this.name,
+    this.password,
+    this.campus,
+  );
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         json["id"],
         json["name"],
         json["password"],
-        json["campus"],);
+        json["campus"],
+      );
 }
 
-class Notify{
+class Notify {
   late int id;
   late String description;
   late String date;
@@ -411,17 +448,16 @@ class Notify{
   Notify({required this.id, required this.description, required this.date});
 
   factory Notify.fromJson(Map<String, dynamic> json) => Notify(
-    id: json["id"],
-    description: json["description"],
-    date: json["date"],
-  );
+        id: json["id"],
+        description: json["description"],
+        date: json["date"],
+      );
 }
 
-class Document{
+class Document {
   late String id;
   late String name;
   late String path;
 
   Document({required this.id, required this.name, required this.path});
-  
 }

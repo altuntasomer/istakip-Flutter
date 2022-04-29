@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  
   late Future<List<Job>> jobs;
   @override
   Widget build(BuildContext context) {
@@ -32,12 +31,10 @@ class HomePageState extends State<HomePage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    if(globals.s == false)
-    {
+    if (globals.s == false) {
       SessionControl();
       globals.s = true;
     }
-    
 
     List<String> categories = ["Jenerator", "UPS", "Chiller", "Isıtma"];
     List<String> images = [
@@ -47,11 +44,11 @@ class HomePageState extends State<HomePage> {
       "image/gas-heater.png"
     ];
     jobs = DbHelper().fetchJob();
-    
+
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.grey[100],
       body: Container(
         decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -68,7 +65,6 @@ class HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 SizedBox(
                   height: 150,
                   child: Image.asset("image/logo_tr.png"),
@@ -78,7 +74,10 @@ class HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("YAPI VE TEKNİK İŞLER MÜDÜRLÜĞÜ", style: TextStyle(fontWeight: FontWeight.w700),),
+                Text(
+                  "YAPI VE TEKNİK İŞLER MÜDÜRLÜĞÜ",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
               ],
             ),
             SizedBox(
@@ -117,22 +116,20 @@ class HomePageState extends State<HomePage> {
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: FutureBuilder<List<Job>>(
-                  future: jobs,
-                  builder: (context,snapshot){
-                    if(snapshot.hasData){
-                      return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return demoTopRatedDr(context, snapshot.data![index]);
-                      });
-                    }
-                  
-                  else if(snapshot.hasError){
-                    return Text("${snapshot.error}");
-                  }
-                  return CircularProgressIndicator();
-                  }
-                ),
+                    future: jobs,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return demoTopRatedDr(context,
+                                  snapshot.data!.reversed.toList()[index]);
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return CircularProgressIndicator();
+                    }),
               ),
             ),
             Row(
@@ -152,7 +149,8 @@ class HomePageState extends State<HomePage> {
                 GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NewJob()));
+                            MaterialPageRoute(builder: (context) => NewJob()))
+                        .then((_) => setState(() {}));
                   },
                   child: Column(
                     children: [
@@ -174,15 +172,14 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Notifications())),
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Notifications())),
                   child: Icon(
                     Icons.notifications_active_outlined,
                     color: Color.fromARGB(255, 94, 161, 182),
                     size: 40,
                   ),
                 ),
-                
               ],
             ),
             SizedBox(
@@ -325,23 +322,16 @@ class HomePageState extends State<HomePage> {
 
   SessionControl() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('username');
-    prefs.remove('userid');
     String? username = prefs.getString('username');
     int? userid = prefs.getInt('userid');
     if (username == null) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
-    }
-    else{
+    } else {
       globals.id = userid!;
       globals.username = username;
-      setState(() {
-        
-      });
+      setState(() {});
     }
     return "Success";
   }
-
-  
 }

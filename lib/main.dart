@@ -4,7 +4,6 @@ import 'globals.dart' as globals;
 import 'HomePage.dart';
 
 void main() {
-  
   runApp(MyApp());
 }
 
