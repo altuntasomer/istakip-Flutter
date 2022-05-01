@@ -6,7 +6,7 @@ import 'package:istakip/DbHelper.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
-
+import 'globals.dart' as globals;
 class NewJob extends StatefulWidget {
   const NewJob({Key? key}) : super(key: key);
 
@@ -138,8 +138,15 @@ class _NewJobState extends State<NewJob> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
-                    onTap: () async {
-                      DbHelper().postImage(photos);
+                    onTap: ()  {
+                      DbHelper().newJob(Job("", descriptionController.text, 0, placeController.text, "OK", timeController.text, globals.id),context).then((value) async{
+                        Job job = await DbHelper().getLatestJob();
+                        print(job.id);
+                        for(int i = 0; i < photos.length; i++){
+                          await DbHelper().uploadImage(photos[i], job.id);
+                        }
+                      });
+                      
                     },
                     child: Icon(
                       Icons.save,

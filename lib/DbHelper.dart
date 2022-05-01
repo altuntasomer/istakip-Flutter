@@ -11,37 +11,27 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class DbHelper {
-  static const String url = 'http://192.168.1.59';
+  static const String url = 'http://192.168.1.110';
 
-  postImage(File imageFile) async {
-    String uploadurl = '$url/api/postImage';
-    //dont use http://localhost , because emulator don't get that address
-    //insted use your local IP address or use live URL
-    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
-
-    try {
-      List<int> imageBytes = imageFile.readAsBytesSync();
-      String baseimage = base64Encode(imageBytes);
-      //convert file image to Base64 encoding
-      var response = await http.post(Uri.parse(uploadurl), body: {
-        'image': baseimage,
-      });
-      if (response.statusCode == 200) {
-        var jsondata = json.decode(response.body); //decode json data
-        if (jsondata["error"]) {
-          //check error sent from server
-          print(jsondata["msg"]);
-          //if error return from server, show message from server
-        } else {
-          print("Upload successful");
-        }
-      } else {
-        print("Error during connection to server");
-        //there is error durin
-      }
-    } catch (e) {
-      print(e);
-    }
+  uploadImage(XFile image, int job_id) async {
+    var selectedImage = File(image.path);
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${url}:8002/upload/${job_id}"),
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
+    print("request: " + request.toString());
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
   }
 
   Future<Job> getLatestJob() async {
