@@ -34,6 +34,28 @@ class DbHelper {
     http.Response response = await http.Response.fromStream(res);
   }
 
+  Future<List<String>> getJobImages(job_id) async {
+    List<String> urls = <String>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/getjobimages/${job_id}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            urls.add(map['image_url']);
+          }
+        }
+      }
+      return urls;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
   Future<Job> getLatestJob() async {
     final response = await http.get(Uri.parse('${url}:8000/api/getLatestJob/'),
         headers: <String, String>{

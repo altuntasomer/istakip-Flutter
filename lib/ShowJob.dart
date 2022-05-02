@@ -14,7 +14,7 @@ class ShowJob extends StatefulWidget {
 }
 
 class _ShowJobState extends State<ShowJob> {
-  List<XFile> photos = [];
+  late Future<List<String>> urls;
   @override
   Widget build(BuildContext context) {
     return initScreen(context, widget.job);
@@ -22,6 +22,7 @@ class _ShowJobState extends State<ShowJob> {
 
   Widget initScreen(BuildContext context, Job job) {
     Size size = MediaQuery.of(context).size;
+    urls = DbHelper().getJobImages(job.id);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SingleChildScrollView(
@@ -37,18 +38,28 @@ class _ShowJobState extends State<ShowJob> {
               SizedBox(
                 height: 60,
               ),
-              Container(
-                height: photos.length > 0 ? 400 : 0,
-                margin: EdgeInsets.only(left: 20),
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: photos.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
-                      return demoCategories(photos[index].path);
-                    }),
+              FutureBuilder<List<String>>(
+                future: urls,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Container(
+                      height: 400,
+                      margin: EdgeInsets.only(left: 20),
+                      child: Container(
+                        height: snapshot.data!.length > 0 ? 400 : 0,
+                        margin: EdgeInsets.only(left: 20),
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return demoCategories(snapshot.data![index]);
+                            }),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
               ),
               SizedBox(
                 height: 40,
@@ -126,7 +137,7 @@ class _ShowJobState extends State<ShowJob> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-                image: FileImage(File(image)), fit: BoxFit.fill)),
+                image: NetworkImage(image), fit: BoxFit.fill)),
       ),
     );
   }
