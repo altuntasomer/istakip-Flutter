@@ -40,7 +40,7 @@ dependencies:
   http:
   shared_preferences:
   mime:
-
+  syncfusion_flutter_pdfviewer: ^19.1.69-beta
 dev_dependencies:
   flutter_test:
     sdk: flutter

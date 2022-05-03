@@ -34,6 +34,50 @@ class DbHelper {
     http.Response response = await http.Response.fromStream(res);
   }
 
+  Future<List<String>> getDocumentsFolder() async {
+    List<String> folders = <String>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/getDocuments"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            folders.add(map['folder']);
+          }
+        }
+      }
+      return folders;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+Future<List<Document>> getDocumentsByFolder(String folder) async {
+    List<Document> folders = <Document>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/getDocumentsByFolder/${folder}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            folders.add(Document.fromJson(map));
+          }
+        }
+      }
+      return folders;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
   Future<List<String>> getJobImages(job_id) async {
     List<String> urls = <String>[];
 
@@ -55,6 +99,8 @@ class DbHelper {
       throw Exception('Failed to load Notify');
     }
   }
+
+
 
   Future<Job> getLatestJob() async {
     final response = await http.get(Uri.parse('${url}:8000/api/getLatestJob/'),
@@ -467,9 +513,15 @@ class Notify {
 }
 
 class Document {
-  late String id;
+  late int id;
   late String name;
   late String path;
 
   Document({required this.id, required this.name, required this.path});
+
+  factory Document.fromJson(Map<String, dynamic> json) => Document(
+        id: json["id"],
+        name: json["name"],
+        path: json["path"],
+      );
 }

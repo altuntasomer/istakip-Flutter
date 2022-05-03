@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:istakip/DbHelper.dart';
+import 'package:istakip/PdfViewer.dart';
 
-import 'DocumentsByFolder.dart';
-
-class Documents extends StatefulWidget {
-  const Documents({ Key? key }) : super(key: key);
+class DocumentsByFolder extends StatefulWidget {
+  final String folder;
+  const DocumentsByFolder({ Key? key , required this.folder}) : super(key: key);
 
   @override
-  State<Documents> createState() => DocumentsState();
+  State<DocumentsByFolder> createState() => DocumentsByFolderState();
 }
 
-class DocumentsState extends State<Documents> {
-  late Future<List<String>> folders;
+class DocumentsByFolderState extends State<DocumentsByFolder> {
+  late Future<List<Document>> folders;
   void initState() {
     super.initState();
-    folders = DbHelper().getDocumentsFolder();
+    
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    var folderName = widget.folder;
+    folders = DbHelper().getDocumentsByFolder(folderName);
     return Scaffold(
       body: Center(
-          child: FutureBuilder<List<String>>(
+          child: FutureBuilder<List<Document>>(
             future: folders,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -44,16 +45,19 @@ class DocumentsState extends State<Documents> {
     );}
 
 
-  Widget demoTopRatedDr(BuildContext context, String folder) {
+  Widget demoTopRatedDr(BuildContext context, Document folder) {
     var size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DocumentsByFolder(folder: folder),
+            builder: (context) => PdfViewer(
+              path: folder.path,
+            ),
           ),
         );
+        
       },
       child: Container(
         height: 90,
@@ -72,7 +76,7 @@ class DocumentsState extends State<Documents> {
               height: 90,
               width: 50,
               child: Icon(
-                Icons.folder,
+                Icons.picture_as_pdf,
                 color: Color(0xff363636),
                 size: 30,
               ),
@@ -86,7 +90,7 @@ class DocumentsState extends State<Documents> {
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     child: Text(
-                      folder,
+                      folder.name,
                       textDirection: TextDirection.ltr,
                       textAlign: TextAlign.justify,
                       maxLines: 3,
