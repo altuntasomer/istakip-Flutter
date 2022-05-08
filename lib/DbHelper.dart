@@ -56,6 +56,94 @@ class DbHelper {
     }
   }
 
+Future<List<GeneratorKind>> unfilledGenerators() async {
+    List<GeneratorKind> generators = <GeneratorKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledgenerators/1"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            generators.add(GeneratorKind.fromJson(map));
+          }
+        }
+      }
+      return generators;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<UpsKind>> unfilledUps() async {
+    List<UpsKind> upss = <UpsKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledupss/1"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            upss.add(UpsKind.fromJson(map));
+          }
+        }
+      }
+      return upss;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<ChillerKind>> unfilledChillers() async {
+    List<ChillerKind> chillers = <ChillerKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledchillers/1"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            chillers.add(ChillerKind.fromJson(map));
+          }
+        }
+      }
+      return chillers;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+Future<List<HeaterKind>> unfilledHeaters() async {
+    List<HeaterKind> heaters = <HeaterKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledheaters/1"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            heaters.add(HeaterKind.fromJson(map));
+          }
+        }
+      }
+      return heaters;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
 Future<List<Document>> getDocumentsByFolder(String folder) async {
     List<Document> folders = <Document>[];
 
@@ -205,6 +293,109 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     Navigator.of(context).pop();
   }
 
+  newGenerator(Generator generator, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("${url}:8000/api/newgenerator/${globals.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "campus": generator.campus,
+        "description": generator.description,
+        "fuelControl": generator.fuelControl,
+        "kind": generator.kind,
+        "load": generator.load,
+        "oil": generator.oil,
+        "user_id": generator.user_id,
+        "workHour": generator.workHour,
+        "waterControl": generator.waterControl,
+        "term": generator.term,
+      }),
+    );
+    final snackBar = SnackBar(
+      content: const Text('Generator kaydedildi'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.of(context).pop();
+  }
+        
+  newUps(Ups ups, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("${url}:8000/api/newups/${globals.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "campus": ups.campus,
+        "description": ups.description,
+        "heat": ups.heat,
+        "kind": ups.kind,
+        "voltageIn": ups.voltageIn,
+        "user_id": ups.user_id,
+        "voltageOut": ups.voltageOut,
+        "load": ups.load,
+        "term": ups.term,
+      }),
+    );
+    final snackBar = SnackBar(
+      content: const Text('UPS kaydedildi'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.of(context).pop();
+  }
+
+  newChiller(Chiller chiller, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("${url}:8000/api/newchiller/${globals.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "campus": chiller.campus,
+        "description": chiller.description,
+        "heat": chiller.heat,
+        "kind": chiller.kind,
+        "gasPressure": chiller.gasPressure,
+        "user_id": chiller.user_id,
+        "pumpControl": chiller.pumpControl,
+        "waterPressure": chiller.waterPressure,
+        "term": chiller.term,
+      }),
+    );
+    final snackBar = SnackBar(
+      content: const Text('Chiller kaydedildi'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.of(context).pop();
+  }
+
+  newHeater(Heater heater, BuildContext context) async {
+    final response = await http.post(
+      Uri.parse("${url}:8000/api/newheater/${globals.id}"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "campus": heater.campus,
+        "description": heater.description,
+        "heat": heater.heat,
+        "kind": heater.kind,
+        "block": heater.block,
+        "user_id": heater.user_id,
+        "pumpControl": heater.pumpControl,
+        "fireControl": heater.fireControl,
+        "waterPressure": heater.waterPressure,
+        "term": heater.term,
+      }),
+        
+    );
+    final snackBar = SnackBar(
+      content: const Text('Heater kaydedildi'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.of(context).pop();
+  }
+
   Future<List<GeneratorKind>> fetchGeneratorKind() async {
     List<GeneratorKind> notifies = <GeneratorKind>[];
 
@@ -327,17 +518,18 @@ class Job {
 }
 
 class Generator {
-  late String id;
+  late int id;
   late String campus;
   late String description;
   late String fuelControl;
-  late String kind;
+  late int kind;
   late String load;
   late String oil;
-  late String user_id;
+  late int user_id;
   late String workHour;
   late String date;
   late String waterControl;
+  late int term;
 
   Generator(
       this.id,
@@ -350,7 +542,36 @@ class Generator {
       this.user_id,
       this.workHour,
       this.date,
-      this.waterControl);
+      this.waterControl,
+      this.term);
+
+  factory Generator.fromJson(Map<String, dynamic> json) => Generator(
+        json["id"],
+        json["campus"],
+        json["description"],
+        json["fuelControl"],
+        json["kind"],
+        json["load"],
+        json["oil"],
+        json["user_id"],
+        json["workHour"],
+        json["date"],
+        json["waterControl"],
+        json["term"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "campus": campus,
+        "description": description,
+        "fuelControl": fuelControl,
+        "kind": kind,
+        "load": load,
+        "oil": oil,
+        "user_id": user_id,
+        "workHour": workHour,
+        "waterControl": waterControl,
+        "term": term,
+      };
 }
 
 class GeneratorKind {
@@ -368,19 +589,46 @@ class GeneratorKind {
 }
 
 class Ups {
-  late String id;
+  late int id;
   late String campus;
   late String description;
   late String heat;
-  late String kind;
+  late int kind;
   late String voltageIn;
-  late String user_id;
+  late int user_id;
   late String voltageOut;
   late String date;
   late String load;
+  late int term;
 
   Ups(this.id, this.campus, this.description, this.heat, this.kind,
-      this.voltageIn, this.user_id, this.voltageOut, this.date, this.load);
+      this.voltageIn, this.user_id, this.voltageOut, this.date, this.load, this.term);
+
+  factory Ups.fromJson(Map<String, dynamic> json) => Ups(
+        json["id"],
+        json["campus"],
+        json["description"],
+        json["heat"],
+        json["kind"],
+        json["voltageIn"],
+        json["user_id"],
+        json["voltageOut"],
+        json["date"],
+        json["load"],
+        json["term"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "campus": campus,
+        "description": description,
+        "heat": heat,
+        "kind": kind,
+        "voltageIn": voltageIn,
+        "user_id": user_id,
+        "voltageOut": voltageOut,
+        "load": load,
+        "term": term,
+      };
 }
 
 class UpsKind {
@@ -398,16 +646,17 @@ class UpsKind {
 }
 
 class Chiller {
-  late String id;
+  late int id;
   late String campus;
   late String description;
   late String heat;
-  late String kind;
+  late int kind;
   late String gasPressure;
-  late String user_id;
+  late int user_id;
   late String pumpControl;
   late String date;
   late String waterPressure;
+  late int term;
 
   Chiller(
       this.id,
@@ -419,7 +668,34 @@ class Chiller {
       this.user_id,
       this.pumpControl,
       this.date,
-      this.waterPressure);
+      this.waterPressure,
+      this.term);
+
+  factory Chiller.fromJson(Map<String, dynamic> json) => Chiller(
+        json["id"],
+        json["campus"],
+        json["description"],
+        json["heat"],
+        json["kind"],
+        json["gasPressure"],
+        json["user_id"],
+        json["pumpControl"],
+        json["date"],
+        json["waterPressure"],
+        json["term"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "campus": campus,
+        "description": description,
+        "heat": heat,
+        "kind": kind,
+        "gasPressure": gasPressure,
+        "user_id": user_id,
+        "pumpControl": pumpControl,
+        "waterPressure": waterPressure,
+        "term": term,
+      };
 }
 
 class ChillerKind {
@@ -437,17 +713,18 @@ class ChillerKind {
 }
 
 class Heater {
-  late String id;
+  late int id;
   late String campus;
   late String description;
   late String heat;
-  late String kind;
+  late int kind;
   late String block;
-  late String user_id;
+  late int user_id;
   late String pumpControl;
   late String fireControl;
   late String date;
   late String waterPressure;
+  late int term;
 
   Heater(
       this.id,
@@ -460,7 +737,36 @@ class Heater {
       this.pumpControl,
       this.fireControl,
       this.date,
-      this.waterPressure);
+      this.waterPressure,
+      this.term);
+
+  factory Heater.fromJson(Map<String, dynamic> json) => Heater(
+        json["id"],
+        json["campus"],
+        json["description"],
+        json["heat"],
+        json["kind"],
+        json["block"],
+        json["user_id"],
+        json["pumpControl"],
+        json["fireControl"],
+        json["date"],
+        json["waterPressure"],
+        json["term"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "campus": campus,
+        "description": description,
+        "heat": heat,
+        "kind": kind,
+        "block": block,
+        "user_id": user_id,
+        "pumpControl": pumpControl,
+        "fireControl": fireControl,
+        "waterPressure": waterPressure,
+        "term": term,
+      };
 }
 
 class HeaterKind {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
+import '../DbHelper.dart';
+
 class UpsPage extends StatefulWidget {
   const UpsPage({Key? key}) : super(key: key);
 
@@ -15,7 +17,11 @@ class UpsPageState extends State<UpsPage> {
   var oilcontrol = false;
   var watercontrol = false;
   var fuel = ["1/4", "1/2", "3/4", "Full"];
-
+  var descriptionController = TextEditingController();
+  var heatController = TextEditingController();
+  var vin = TextEditingController();
+  var vot = TextEditingController();
+  var load = TextEditingController();
   var dropdownFuel, dropdownFuel2;
   @override
   Widget build(BuildContext context) {
@@ -46,9 +52,7 @@ class UpsPageState extends State<UpsPage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
+                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -57,6 +61,7 @@ class UpsPageState extends State<UpsPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: vin,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -75,6 +80,7 @@ class UpsPageState extends State<UpsPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: vot,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -93,6 +99,7 @@ class UpsPageState extends State<UpsPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: load,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -111,6 +118,7 @@ class UpsPageState extends State<UpsPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: heatController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -129,6 +137,7 @@ class UpsPageState extends State<UpsPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: descriptionController,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.description_outlined,
@@ -174,6 +183,11 @@ class UpsPageState extends State<UpsPage> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
+                    onTap: () {
+                      DbHelper().newUps(Ups(1,"campus",descriptionController.text,heatController.text,1,vin.text,1,vot.text,"f",load.text,1), context).then((value) async{
+                        
+                      });
+                    },
                     child: Icon(
                       Icons.save,
                       size: 60,

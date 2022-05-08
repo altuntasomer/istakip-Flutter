@@ -24,7 +24,7 @@ class _HeaterList extends State<HeaterList> {
 
   Widget initWidget(BuildContext context, ) {
     //Size size = MediaQuery.of(context).size;
-    heaterKinds = DbHelper().fetchHeaterKind();
+    heaterKinds = DbHelper().unfilledHeaters();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(

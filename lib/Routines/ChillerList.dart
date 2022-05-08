@@ -23,7 +23,7 @@ class _ChillerList extends State<ChillerList> {
 
   Widget initWidget(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
-    chillerKinds = DbHelper().fetchChillerKind();
+    chillerKinds = DbHelper().unfilledChillers();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(

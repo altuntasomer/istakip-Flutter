@@ -22,7 +22,7 @@ class _UpsList extends State<UpsList> {
 
   Widget initWidget(BuildContext context,) {
     //Size size = MediaQuery.of(context).size;
-    upsKinds = DbHelper().fetchUpsKind();
+    upsKinds = DbHelper().unfilledUps();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(

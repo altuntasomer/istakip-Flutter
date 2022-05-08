@@ -22,7 +22,7 @@ class _GeneratorList extends State<GeneratorList> {
 
   Widget initWidget(BuildContext context,) {
     //Size size = MediaQuery.of(context).size;
-    generatorKinds = DbHelper().fetchGeneratorKind();
+    generatorKinds = DbHelper().unfilledGenerators();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 94, 161, 182),
       body: Column(

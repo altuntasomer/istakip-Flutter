@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
+import '../DbHelper.dart';
+
 class GeneratorPage extends StatefulWidget {
   const GeneratorPage({Key? key}) : super(key: key);
 
@@ -15,8 +17,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
   var oilcontrol = false;
   var watercontrol = false;
   var fuel = ["1/4", "1/2", "3/4", "Full"];
-
+  var descriptionController = TextEditingController();
   var dropdownFuel, dropdownFuel2;
+  var workHourController = TextEditingController();
+  String oil = "";
+  String water = "";
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -46,9 +51,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
+                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -152,6 +155,12 @@ class _GeneratorPageState extends State<GeneratorPage> {
                     onChanged: (bool? value) {
                       setState(() {
                         watercontrol = value!;
+                        if (value) {
+                          water = "1";
+                        }
+                        else {
+                          water = "0";
+                        }
                       });
                     },
                   ),
@@ -180,6 +189,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
                     onChanged: (bool? value) {
                       setState(() {
                         oilcontrol = value!;
+                        if(value){
+                          oil = "1";
+                        }else{
+                          oil = "0";
+                        }
                       });
                     },
                   ),
@@ -212,6 +226,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
               TextField(
                 obscureText: false,
                 keyboardType: TextInputType.number,
+                controller: workHourController,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.alarm,
@@ -229,6 +244,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: descriptionController,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.description_outlined,
@@ -271,6 +287,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
+                    onTap: () async {
+                      DbHelper().newGenerator(Generator(1,"campus",descriptionController.text,dropdownFuel.toString(),1,dropdownFuel2.toString(),oil,1,workHourController.text,"g",water,1), context).then((value) async{
+                        
+                      });
+                    },
                     child: Icon(
                       Icons.save,
                       size: 60,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
+import '../DbHelper.dart';
+
 class ChillerPage extends StatefulWidget {
   const ChillerPage({Key? key}) : super(key: key);
 
@@ -15,7 +17,10 @@ class ChillerPageState extends State<ChillerPage> {
   var oilcontrol = false;
   var watercontrol = false;
   var fuel = ["1/4", "1/2", "3/4", "Full"];
-
+  var descriptionController = TextEditingController();
+  var heatController = TextEditingController();
+  var gasController = TextEditingController();
+  var waterController = TextEditingController();
   var dropdownFuel, dropdownFuel2;
   @override
   Widget build(BuildContext context) {
@@ -46,9 +51,7 @@ class ChillerPageState extends State<ChillerPage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
+                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -57,6 +60,7 @@ class ChillerPageState extends State<ChillerPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: gasController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     labelText: "Gaz Basıncı (Bar)",
@@ -71,6 +75,7 @@ class ChillerPageState extends State<ChillerPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: waterController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -89,6 +94,7 @@ class ChillerPageState extends State<ChillerPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: heatController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -107,6 +113,7 @@ class ChillerPageState extends State<ChillerPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: descriptionController,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.description_outlined,
@@ -152,6 +159,11 @@ class ChillerPageState extends State<ChillerPage> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
+                    onTap: ()  {
+                      DbHelper().newChiller(Chiller(1,"campus",descriptionController.text,heatController.text,1,gasController.text,1,"e","f",waterController.text,1), context).then((value) async{
+                        
+                      });
+                    },
                     child: Icon(
                       Icons.save,
                       size: 60,

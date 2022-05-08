@@ -44,7 +44,10 @@ class HomePageState extends State<HomePage> {
       "image/gas-heater.png"
     ];
     jobs = DbHelper().fetchJob();
-
+    // DbHelper().newGenerator(Generator(1,"a","b","c",1,"d","e",1,"f","g","h",1), context);
+    // DbHelper().newChiller(Chiller(1,"a","b","c",1,"d",1,"e","f","g",1), context);
+    // DbHelper().newUps(Ups(1,"a","b","c",1,"d",1,"e","f","g",1), context);
+    // DbHelper().newHeater(Heater(1,"a","b","c",1,"d",1,"e","f","g","h",1), context);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(

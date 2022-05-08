@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:istakip/TakePicture.dart';
 import 'package:camera/camera.dart';
 
+import '../DbHelper.dart';
+
 class HeaterPage extends StatefulWidget {
   const HeaterPage({Key? key}) : super(key: key);
 
@@ -15,7 +17,9 @@ class HeaterPageState extends State<HeaterPage> {
   var oilcontrol = false;
   var watercontrol = false;
   var fuel = ["1/4", "1/2", "3/4", "Full"];
-
+  var descriptionController = TextEditingController();
+  var heatController = TextEditingController();
+  var waterController = TextEditingController();
   var dropdownFuel, dropdownFuel2;
   @override
   Widget build(BuildContext context) {
@@ -46,9 +50,7 @@ class HeaterPageState extends State<HeaterPage> {
                     scrollDirection: Axis.horizontal,
                     itemCount: photos.length,
                     itemBuilder: (BuildContext context, int index) {
-                      print("******-*-*-**-*-*-*-*");
-                      print(index);
-                      print("******-*-*-**-*-*-*-*");
+                      
                       return demoCategories(photos[index].path);
                     }),
               ),
@@ -113,6 +115,7 @@ class HeaterPageState extends State<HeaterPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: waterController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -131,6 +134,7 @@ class HeaterPageState extends State<HeaterPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: heatController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -149,6 +153,7 @@ class HeaterPageState extends State<HeaterPage> {
               ),
               TextField(
                 obscureText: false,
+                controller: descriptionController,
                 decoration: InputDecoration(
                     icon: const Icon(
                       Icons.description_outlined,
@@ -194,6 +199,11 @@ class HeaterPageState extends State<HeaterPage> {
                   ),
                   Expanded(child: SizedBox()),
                   GestureDetector(
+                    onTap: () async {
+                      DbHelper().newHeater(Heater(1,"campus",descriptionController.text,heatController.text,1,"d",1,"e","f","g",waterController.text,1), context).then((value) async{
+                        
+                      });
+                    },
                     child: Icon(
                       Icons.save,
                       size: 60,
