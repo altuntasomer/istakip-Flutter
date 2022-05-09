@@ -161,7 +161,11 @@ class ChillerPageState extends State<ChillerPage> {
                   GestureDetector(
                     onTap: ()  {
                       DbHelper().newChiller(Chiller(1,"campus",descriptionController.text,heatController.text,1,gasController.text,1,"e","f",waterController.text,1), context).then((value) async{
-                        
+                        Chiller chiller = await DbHelper().getLatestChiller();
+                        print(chiller.id);
+                        for(int i = 0; i < photos.length; i++){
+                          await DbHelper().uploadChillerImage(photos[i], chiller.id);
+                        }
                       });
                     },
                     child: Icon(

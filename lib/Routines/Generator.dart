@@ -289,7 +289,11 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   GestureDetector(
                     onTap: () async {
                       DbHelper().newGenerator(Generator(1,"campus",descriptionController.text,dropdownFuel.toString(),1,dropdownFuel2.toString(),oil,1,workHourController.text,"g",water,1), context).then((value) async{
-                        
+                        Generator generator = await DbHelper().getLatestGenerator();
+                        print(generator.id);
+                        for(int i = 0; i < photos.length; i++){
+                          await DbHelper().uploadGeneratorImage(photos[i], generator.id);
+                        }
                       });
                     },
                     child: Icon(

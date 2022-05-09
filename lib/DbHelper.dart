@@ -29,7 +29,86 @@ class DbHelper {
       ),
     );
     request.headers.addAll(headers);
-    print("request: " + request.toString());
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+  }
+
+  uploadGeneratorImage(XFile image, int generator_id) async {
+    var selectedImage = File(image.path);
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${url}:8002/uploadGenerator/${generator_id}"),
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+  }
+
+  uploadUpsImage(XFile image, int ups_id) async {
+    var selectedImage = File(image.path);
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${url}:8002/uploadUps/${ups_id}"),
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+  }
+
+  uploadChillerImage(XFile image, int chiller_id) async {
+    var selectedImage = File(image.path);
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${url}:8002/uploadChiller/${chiller_id}"),
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
+    var res = await request.send();
+    http.Response response = await http.Response.fromStream(res);
+  }
+
+  uploadHeaterImage(XFile image, int heater_id) async {
+    var selectedImage = File(image.path);
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse("${url}:8002/uploadHeater/${heater_id}"),
+    );
+    Map<String, String> headers = {"Content-type": "multipart/form-data"};
+    request.files.add(
+      http.MultipartFile(
+        'image',
+        selectedImage.readAsBytes().asStream(),
+        selectedImage.lengthSync(),
+        filename: selectedImage.path.split('/').last,
+      ),
+    );
+    request.headers.addAll(headers);
     var res = await request.send();
     http.Response response = await http.Response.fromStream(res);
   }
@@ -203,6 +282,70 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       return Job("", "", 0, "", "", "", 0);
+    }
+  }
+
+  Future<Generator> getLatestGenerator() async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getLatestGenerator/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Generator.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Generator(0,"","","",0,"","",0,"","","",0);
+    }
+  }
+
+  Future<Ups> getLatestUps() async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getLatestUps/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Ups.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Ups(0,"","","",0,"",0,"","","",0);
+    }
+  }
+
+  Future<Chiller> getLatestChiller() async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getLatestChiller/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Chiller.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Chiller( 0,"","","",0,"",0,"","","",0);
+    }
+  }
+
+  Future<Heater> getLatestHeater() async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getLatestHeater/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Heater.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Heater( 0,"","","",0,"",0,"","","","",0);
     }
   }
 

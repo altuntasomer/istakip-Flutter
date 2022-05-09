@@ -201,7 +201,11 @@ class HeaterPageState extends State<HeaterPage> {
                   GestureDetector(
                     onTap: () async {
                       DbHelper().newHeater(Heater(1,"campus",descriptionController.text,heatController.text,1,"d",1,"e","f","g",waterController.text,1), context).then((value) async{
-                        
+                        Heater heater = await DbHelper().getLatestHeater();
+                        print(heater.id);
+                        for(int i = 0; i < photos.length; i++){
+                          await DbHelper().uploadHeaterImage(photos[i], heater.id);
+                        }
                       });
                     },
                     child: Icon(

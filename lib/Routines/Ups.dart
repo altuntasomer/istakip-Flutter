@@ -185,7 +185,11 @@ class UpsPageState extends State<UpsPage> {
                   GestureDetector(
                     onTap: () {
                       DbHelper().newUps(Ups(1,"campus",descriptionController.text,heatController.text,1,vin.text,1,vot.text,"f",load.text,1), context).then((value) async{
-                        
+                        Ups ups = await DbHelper().getLatestUps();
+                        print(ups.id);
+                        for(int i = 0; i < photos.length; i++){
+                          await DbHelper().uploadUpsImage(photos[i], ups.id);
+                        }
                       });
                     },
                     child: Icon(
