@@ -6,7 +6,8 @@ import 'package:camera/camera.dart';
 import '../DbHelper.dart';
 
 class HeaterPage extends StatefulWidget {
-  const HeaterPage({Key? key}) : super(key: key);
+  final id;
+  const HeaterPage({Key? key, required this.id}) : super(key: key);
 
   @override
   State<HeaterPage> createState() => HeaterPageState();
@@ -15,12 +16,16 @@ class HeaterPage extends StatefulWidget {
 class HeaterPageState extends State<HeaterPage> {
   List<XFile> photos = [];
   var oilcontrol = false;
-  var watercontrol = false;
-  var fuel = ["1/4", "1/2", "3/4", "Full"];
+  var pumpcontrol = false;
+  var firecontrol = false;
   var descriptionController = TextEditingController();
   var heatController = TextEditingController();
-  var waterController = TextEditingController();
-  var dropdownFuel, dropdownFuel2;
+  var pressureController = TextEditingController();
+  
+
+  String pump = '0';
+  String fire = '0';
+
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -29,7 +34,7 @@ class HeaterPageState extends State<HeaterPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 94, 161, 182),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -63,15 +68,21 @@ class HeaterPageState extends State<HeaterPage> {
                   SizedBox(
                     width: 90,
                   ),
-                  Text("Soğutma Suyu Kontrolü"),
+                  Text("Alev Kontrolü"),
                   Expanded(
                     child: SizedBox(),
                   ),
                   Checkbox(
-                    value: watercontrol,
+                    value: firecontrol,
                     onChanged: (bool? value) {
+                      if (value == true) {
+                        fire = '1';
+                      } else {
+                        fire = '0';
+                      }
                       setState(() {
-                        watercontrol = value!;
+                        firecontrol = value!;
+
                       });
                     },
                   ),
@@ -91,15 +102,20 @@ class HeaterPageState extends State<HeaterPage> {
                   SizedBox(
                     width: 90,
                   ),
-                  Text("Soğutma Suyu Kontrolü"),
+                  Text("Pompa Kontrolü"),
                   Expanded(
                     child: SizedBox(),
                   ),
                   Checkbox(
-                    value: watercontrol,
+                    value: pumpcontrol,
                     onChanged: (bool? value) {
+                      if (value == true) {
+                        pump = '1';
+                      } else {
+                        pump = '0';
+                      }
                       setState(() {
-                        watercontrol = value!;
+                        pumpcontrol = value!;
                       });
                     },
                   ),
@@ -115,7 +131,7 @@ class HeaterPageState extends State<HeaterPage> {
               ),
               TextField(
                 obscureText: false,
-                controller: waterController,
+                controller: pressureController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     icon: const Icon(
@@ -200,7 +216,7 @@ class HeaterPageState extends State<HeaterPage> {
                   Expanded(child: SizedBox()),
                   GestureDetector(
                     onTap: () async {
-                      DbHelper().newHeater(Heater(1,"campus",descriptionController.text,heatController.text,1,"d",1,"e","f","g",waterController.text,1), context).then((value) async{
+                      DbHelper().newHeater(Heater(1,"campus",descriptionController.text,heatController.text,widget.id,"d",1,pump,fire,"g",pressureController.text,1), context).then((value) async{
                         Heater heater = await DbHelper().getLatestHeater();
                         print(heater.id);
                         for(int i = 0; i < photos.length; i++){

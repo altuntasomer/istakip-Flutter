@@ -6,7 +6,8 @@ import 'package:camera/camera.dart';
 import '../DbHelper.dart';
 
 class UpsPage extends StatefulWidget {
-  const UpsPage({Key? key}) : super(key: key);
+  final id;
+  const UpsPage({Key? key, required this.id}) : super(key: key);
 
   @override
   State<UpsPage> createState() => UpsPageState();
@@ -31,7 +32,7 @@ class UpsPageState extends State<UpsPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 94, 161, 182),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -184,7 +185,7 @@ class UpsPageState extends State<UpsPage> {
                   Expanded(child: SizedBox()),
                   GestureDetector(
                     onTap: () {
-                      DbHelper().newUps(Ups(1,"campus",descriptionController.text,heatController.text,1,vin.text,1,vot.text,"f",load.text,1), context).then((value) async{
+                      DbHelper().newUps(Ups(1,"campus",descriptionController.text,heatController.text,widget.id,vin.text,1,vot.text,"f",load.text,1), context).then((value) async{
                         Ups ups = await DbHelper().getLatestUps();
                         print(ups.id);
                         for(int i = 0; i < photos.length; i++){

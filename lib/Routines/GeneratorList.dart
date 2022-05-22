@@ -59,7 +59,7 @@ class _GeneratorList extends State<GeneratorList> {
   return GestureDetector(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => GeneratorPage()));
+          context, MaterialPageRoute(builder: (context) => GeneratorPage(id: generatorList.id)));
     },
     child: Container(
       height: 115,
@@ -103,14 +103,7 @@ Widget _buildRow(BuildContext context, GeneratorKind generatorList) {
                   ),
                 ],
               ),
-              // OutlineButton(
-              //     onPressed: () {
-              //       Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //               builder: (context) => DoctorDetailPage(job: job)));
-              //     },
-              //     child: Text("Görüntüle")),
+           
             ],
           ),
         ),

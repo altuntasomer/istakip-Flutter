@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class DbHelper {
-  static const String url = 'http://192.168.1.110';
+  static const String url = 'http://10.1.5.166';
 
   uploadImage(XFile image, int job_id) async {
     var selectedImage = File(image.path);

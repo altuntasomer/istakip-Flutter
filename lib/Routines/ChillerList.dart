@@ -60,7 +60,7 @@ class _ChillerList extends State<ChillerList> {
   return GestureDetector(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ChillerPage()));
+          context, MaterialPageRoute(builder: (context) => ChillerPage(id: chillerList.id,)));
     },
     child: Container(
       height: 115,
@@ -104,14 +104,7 @@ Widget _buildRow(BuildContext context, ChillerKind chillerList) {
                   ),
                 ],
               ),
-              // OutlineButton(
-              //     onPressed: () {
-              //       Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //               builder: (context) => DoctorDetailPage(job: job)));
-              //     },
-              //     child: Text("Görüntüle")),
+              
             ],
           ),
         ),

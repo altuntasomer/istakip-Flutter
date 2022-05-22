@@ -300,7 +300,7 @@ class HomePageState extends State<HomePage> {
                             children: [
                               Container(
                                 child: Text(
-                                  job.date,
+                                  job.date.split(':')[0].replaceAll('T', '  ') + ":" + job.date.split(':')[1],
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 12,

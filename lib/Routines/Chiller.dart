@@ -6,7 +6,8 @@ import 'package:camera/camera.dart';
 import '../DbHelper.dart';
 
 class ChillerPage extends StatefulWidget {
-  const ChillerPage({Key? key}) : super(key: key);
+  final id;
+  const ChillerPage({Key? key, required this.id}) : super(key: key);
 
   @override
   State<ChillerPage> createState() => ChillerPageState();
@@ -30,7 +31,7 @@ class ChillerPageState extends State<ChillerPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 94, 161, 182),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -160,7 +161,7 @@ class ChillerPageState extends State<ChillerPage> {
                   Expanded(child: SizedBox()),
                   GestureDetector(
                     onTap: ()  {
-                      DbHelper().newChiller(Chiller(1,"campus",descriptionController.text,heatController.text,1,gasController.text,1,"e","f",waterController.text,1), context).then((value) async{
+                      DbHelper().newChiller(Chiller(1,"campus",descriptionController.text,heatController.text,widget.id,gasController.text,1,"e","f",waterController.text,1), context).then((value) async{
                         Chiller chiller = await DbHelper().getLatestChiller();
                         print(chiller.id);
                         for(int i = 0; i < photos.length; i++){

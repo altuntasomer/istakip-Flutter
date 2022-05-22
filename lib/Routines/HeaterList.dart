@@ -61,7 +61,7 @@ class _HeaterList extends State<HeaterList> {
   return GestureDetector(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HeaterPage()));
+          context, MaterialPageRoute(builder: (context) => HeaterPage(id: heaterList.id,)));
     },
     child: Container(
       height: 115,

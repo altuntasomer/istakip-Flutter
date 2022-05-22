@@ -6,7 +6,8 @@ import 'package:camera/camera.dart';
 import '../DbHelper.dart';
 
 class GeneratorPage extends StatefulWidget {
-  const GeneratorPage({Key? key}) : super(key: key);
+  final id;
+  const GeneratorPage({Key? key,required this.id}) : super(key: key);
 
   @override
   State<GeneratorPage> createState() => _GeneratorPageState();
@@ -30,7 +31,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
   Widget initScreen() {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor:Color.fromARGB(255, 94, 161, 182),
+      backgroundColor:Colors.white,
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -288,7 +289,7 @@ class _GeneratorPageState extends State<GeneratorPage> {
                   Expanded(child: SizedBox()),
                   GestureDetector(
                     onTap: () async {
-                      DbHelper().newGenerator(Generator(1,"campus",descriptionController.text,dropdownFuel.toString(),1,dropdownFuel2.toString(),oil,1,workHourController.text,"g",water,1), context).then((value) async{
+                      DbHelper().newGenerator(Generator(1,"campus",descriptionController.text,dropdownFuel.toString(),widget.id,dropdownFuel2.toString(),oil,1,workHourController.text,"g",water,1), context).then((value) async{
                         Generator generator = await DbHelper().getLatestGenerator();
                         print(generator.id);
                         for(int i = 0; i < photos.length; i++){
