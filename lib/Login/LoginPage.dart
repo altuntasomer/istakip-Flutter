@@ -48,7 +48,8 @@ class _LoginPageState extends State<LoginPage> {
               if (user.id > 0) {
                 globals.username = user.name;
                 globals.id = user.id;
-                SessionWrite(context, user.name, user.id);
+                globals.campus = user.campus;
+                SessionWrite(context, user.name, user.id, user.campus);
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomePage()));
               } else {
@@ -78,10 +79,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SessionWrite(BuildContext context, String username, int userid) async {
+  SessionWrite(BuildContext context, String username, int userid, String campus) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setInt('userid', userid);
+    prefs.setString('campus', campus);
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => HomePage()));
   }

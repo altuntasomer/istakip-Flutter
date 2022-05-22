@@ -269,18 +269,7 @@ class HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Text(
-                      job.description,
-                      style: TextStyle(
-                        color: Color(0xff363636),
-                        fontSize: 17,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
+                  
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     child: Row(
@@ -312,6 +301,18 @@ class HomePageState extends State<HomePage> {
                           ),
                         )
                       ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      job.description,
+                      style: TextStyle(
+                        color: Color(0xff363636),
+                        fontSize: 17,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],

@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class DbHelper {
-  static const String url = 'http://10.1.5.166';
+  static const String url = 'http://192.168.1.110';
 
   uploadImage(XFile image, int job_id) async {
     var selectedImage = File(image.path);
@@ -138,7 +138,7 @@ class DbHelper {
 Future<List<GeneratorKind>> unfilledGenerators() async {
     List<GeneratorKind> generators = <GeneratorKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledgenerators/1"));
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledgenerators/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -160,7 +160,7 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
   Future<List<UpsKind>> unfilledUps() async {
     List<UpsKind> upss = <UpsKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledupss/1"));
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledupss/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -182,7 +182,7 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
   Future<List<ChillerKind>> unfilledChillers() async {
     List<ChillerKind> chillers = <ChillerKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledchillers/1"));
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledchillers/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -204,7 +204,7 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
 Future<List<HeaterKind>> unfilledHeaters() async {
     List<HeaterKind> heaters = <HeaterKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledheaters/1"));
+    final response = await http.get(Uri.parse("${url}:8000/api/unfilledheaters/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
