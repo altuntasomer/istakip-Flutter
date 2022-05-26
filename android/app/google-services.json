@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1058664724515",
+    "project_id": "istakip-5abb7",
+    "storage_bucket": "istakip-5abb7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058664724515:android:a03a9b65626fa9c4609996",
+        "android_client_info": {
+          "package_name": "com.example.istakip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058664724515-uj73ausbttcd1a5rhc92ep7s4qgonnu9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYsuuLuZ68D2M56mwhoKrmItlshhdlJxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058664724515-uj73ausbttcd1a5rhc92ep7s4qgonnu9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

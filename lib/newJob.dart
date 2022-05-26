@@ -141,7 +141,7 @@ class _NewJobState extends State<NewJob> {
                     onTap: ()  {
                       DbHelper().newJob(Job("", descriptionController.text, 0, placeController.text, "OK", timeController.text, globals.id),context).then((value) async{
                         Job job = await DbHelper().getLatestJob();
-                        print(job.id);
+                        
                         for(int i = 0; i < photos.length; i++){
                           await DbHelper().uploadImage(photos[i], job.id);
                         }

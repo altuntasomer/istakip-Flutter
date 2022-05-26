@@ -157,10 +157,53 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
     }
   }
 
+  Future<List<GeneratorKind>> filledGenerators() async {
+    List<GeneratorKind> generators = <GeneratorKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/filledgenerators/${globals.campus}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            generators.add(GeneratorKind.fromJson(map));
+          }
+        }
+      }
+      return generators;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
   Future<List<UpsKind>> unfilledUps() async {
     List<UpsKind> upss = <UpsKind>[];
 
     final response = await http.get(Uri.parse("${url}:8000/api/unfilledupss/${globals.campus}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            upss.add(UpsKind.fromJson(map));
+          }
+        }
+      }
+      return upss;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+Future<List<UpsKind>> filledUps() async {
+    List<UpsKind> upss = <UpsKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/filledupss/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -200,11 +243,54 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
       throw Exception('Failed to load Notify');
     }
   }
+Future<List<ChillerKind>> filledChillers() async {
+    List<ChillerKind> chillers = <ChillerKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/filledchillers/${globals.campus}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            chillers.add(ChillerKind.fromJson(map));
+          }
+        }
+      }
+      return chillers;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
 
 Future<List<HeaterKind>> unfilledHeaters() async {
     List<HeaterKind> heaters = <HeaterKind>[];
 
     final response = await http.get(Uri.parse("${url}:8000/api/unfilledheaters/${globals.campus}"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> values = <dynamic>[];
+      values = json.decode(utf8.decode(response.bodyBytes));
+      if (values.length > 0) {
+        for (int i = 0; i < values.length; i++) {
+          if (values[i] != null) {
+            Map<String, dynamic> map = values[i];
+            heaters.add(HeaterKind.fromJson(map));
+          }
+        }
+      }
+      return heaters;
+    } else {
+      throw Exception('Failed to load Notify');
+    }
+  }
+
+  Future<List<HeaterKind>> filledHeaters() async {
+    List<HeaterKind> heaters = <HeaterKind>[];
+
+    final response = await http.get(Uri.parse("${url}:8000/api/filledheaters/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -282,6 +368,71 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       return Job("", "", 0, "", "", "", 0);
+    }
+  }
+
+  Future<Generator> getGeneratorByKind(int id) async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getGeneratorByKind/${id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Generator.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Generator(0,"","","",0,"","",0,"","","",0);
+    }
+  }
+
+  Future<Chiller> getChillerByKind(int id) async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getChillerByKind/${id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Chiller.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Chiller( 0,"","","",0,"",0,"","","",0);
+    }
+  }
+
+  Future<Heater> getHeaterByKind(int id) async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getHeaterByKind/${id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Heater.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Heater( 0,"","","",0,"",0,"","","","",0);
+
+    }
+  }
+
+  Future<Ups> getUpsByKind(int id) async {
+    final response = await http.get(Uri.parse('${url}:8000/api/getUpsByKind/${id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Ups.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      return Ups(0,"","","",0,"",0,"","","",0);
     }
   }
 

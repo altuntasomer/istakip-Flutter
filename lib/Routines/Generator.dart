@@ -291,11 +291,12 @@ class _GeneratorPageState extends State<GeneratorPage> {
                     onTap: () async {
                       DbHelper().newGenerator(Generator(1,"campus",descriptionController.text,dropdownFuel.toString(),widget.id,dropdownFuel2.toString(),oil,1,workHourController.text,"g",water,1), context).then((value) async{
                         Generator generator = await DbHelper().getLatestGenerator();
-                        print(generator.id);
+                       
                         for(int i = 0; i < photos.length; i++){
                           await DbHelper().uploadGeneratorImage(photos[i], generator.id);
                         }
                       });
+                      
                     },
                     child: Icon(
                       Icons.save,

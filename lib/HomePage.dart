@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:istakip/Category.dart';
@@ -21,6 +22,47 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   late Future<List<Job>> jobs;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+          
+        }
+      },
+    );
+    // 2. This method only call when App in forground it mean app must be opened
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          // LocalNotificationService.display(message);
+
+        }
+      },
+    );
+
+    // 3. This method only call when App in background and not terminated(not closed)
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return initScreen();
@@ -64,7 +106,15 @@ class HomePageState extends State<HomePage> {
             SizedBox(
               height: 30,
             ),
-            Text(globals.username),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(globals.username),
+                IconButton(onPressed: (){
+                  logout();
+                }, icon: Icon(Icons.logout, color: Color.fromARGB(255, 38, 174, 192),)),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -246,79 +296,90 @@ class HomePageState extends State<HomePage> {
                     )));
       },
       child: Container(
-        height: 90,
-        // width: size.width,
+        width: size.width-40,
         margin: EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              height: 90,
-              width: 50,
-              child: Image.asset("image/repair.png"),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
             ),
-            Container(
-              margin: EdgeInsets.only(left: 20, top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Row(
-                      children: [
-                        Text(
-                          job.place,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Container(
+            height: 90,
+            // width: size.width,
+            
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 20),
+                  height: 90,
+                  width: 50,
+                  child: Image.asset("image/repair.png"),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 20, top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: [
+                            Text(
+                              job.place,
+                              style: TextStyle(
+                                color: Color(0xffababab),
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 3, left: size.width * 0.25),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      job.date.split(':')[0].replaceAll('T', '  ') + ":" + job.date.split(':')[1],
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: 'Roboto',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Text(
+                          job.description,
                           style: TextStyle(
-                            color: Color(0xffababab),
+                            color: Color(0xff363636),
+                            fontSize: 17,
                             fontFamily: 'Roboto',
-                            fontWeight: FontWeight.w300,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(top: 3, left: size.width * 0.25),
-                          child: Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  job.date.split(':')[0].replaceAll('T', '  ') + ":" + job.date.split(':')[1],
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontFamily: 'Roboto',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Text(
-                      job.description,
-                      style: TextStyle(
-                        color: Color(0xff363636),
-                        fontSize: 17,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700,
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -328,14 +389,26 @@ class HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     int? userid = prefs.getInt('userid');
+    String? campus = prefs.getString('campus');
     if (username == null) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       globals.id = userid!;
       globals.username = username;
+      globals.campus = campus!;
       setState(() {});
     }
     return "Success";
+  }
+
+  logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('username');
+    prefs.remove('userid');
+    prefs.remove('campus');
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 }

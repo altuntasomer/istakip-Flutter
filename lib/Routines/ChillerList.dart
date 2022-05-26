@@ -60,7 +60,9 @@ class _ChillerList extends State<ChillerList> {
   return GestureDetector(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ChillerPage(id: chillerList.id,)));
+          context, MaterialPageRoute(builder: (context) => ChillerPage(id: chillerList.id,))).then((value) {setState(() {
+            
+          });});
     },
     child: Container(
       height: 115,

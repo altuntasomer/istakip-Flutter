@@ -23,23 +23,37 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget initScreen() {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: Color.fromARGB(255, 38, 174, 192),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            decoration: InputDecoration(
-              icon: const Icon(
-                Icons.lock,
-                color: Colors.white,
+          Center(
+            child: Container(
+              width: size.width / 70 * 67,
+              child: TextField(
+                cursorColor: Colors.white,
+                decoration: InputDecoration(
+                  icon: const Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  labelText: 'Kullanıcı Kodu',
+                  labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+                controller: passwordController,
               ),
-              labelText: 'Kullanıcı Kodu',
             ),
-            controller: passwordController,
           ),
           SizedBox(
-            height: 20,
+            height: 30,
           ),
           GestureDetector(
             onTap: () async {
@@ -72,14 +86,31 @@ class _LoginPageState extends State<LoginPage> {
                 );
               }
             },
-            child: Text('Giriş Yap'),
+            child: Container(
+              width: 90,
+              height: 40,
+              child: Center(
+                  child: Text(
+                'Giriş Yap',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal),
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           )
         ],
       ),
     );
   }
 
-  SessionWrite(BuildContext context, String username, int userid, String campus) async {
+  SessionWrite(
+      BuildContext context, String username, int userid, String campus) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setInt('userid', userid);

@@ -163,7 +163,7 @@ class ChillerPageState extends State<ChillerPage> {
                     onTap: ()  {
                       DbHelper().newChiller(Chiller(1,"campus",descriptionController.text,heatController.text,widget.id,gasController.text,1,"e","f",waterController.text,1), context).then((value) async{
                         Chiller chiller = await DbHelper().getLatestChiller();
-                        print(chiller.id);
+                        
                         for(int i = 0; i < photos.length; i++){
                           await DbHelper().uploadChillerImage(photos[i], chiller.id);
                         }

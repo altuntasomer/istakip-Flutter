@@ -59,7 +59,9 @@ class _UpsList extends State<UpsList> {
   return GestureDetector(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => UpsPage(id: upsList.id,)));
+          context, MaterialPageRoute(builder: (context) => UpsPage(id: upsList.id,))).then((value) {setState(() {
+            
+          });});
     },
     child: Container(
       height: 115,
