@@ -90,12 +90,12 @@ class _LoginPageState extends State<LoginPage> {
               width: 90,
               height: 40,
               child: Center(
-                  child: Text(
-                'Giriş Yap',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal),
+                child: Text(
+                  'Giriş Yap',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal),
                 ),
               ),
               decoration: BoxDecoration(

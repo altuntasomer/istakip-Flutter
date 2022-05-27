@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class DbHelper {
-  static const String url = 'http://192.168.1.110';
+  static const String url = 'http://192.168.94.68';
 
   uploadImage(XFile image, int job_id) async {
     var selectedImage = File(image.path);
@@ -135,10 +135,11 @@ class DbHelper {
     }
   }
 
-Future<List<GeneratorKind>> unfilledGenerators() async {
+  Future<List<GeneratorKind>> unfilledGenerators() async {
     List<GeneratorKind> generators = <GeneratorKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledgenerators/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/unfilledgenerators/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -160,7 +161,8 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
   Future<List<GeneratorKind>> filledGenerators() async {
     List<GeneratorKind> generators = <GeneratorKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/filledgenerators/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/filledgenerators/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -182,7 +184,8 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
   Future<List<UpsKind>> unfilledUps() async {
     List<UpsKind> upss = <UpsKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledupss/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/unfilledupss/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -200,10 +203,12 @@ Future<List<GeneratorKind>> unfilledGenerators() async {
       throw Exception('Failed to load Notify');
     }
   }
-Future<List<UpsKind>> filledUps() async {
+
+  Future<List<UpsKind>> filledUps() async {
     List<UpsKind> upss = <UpsKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/filledupss/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/filledupss/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -225,7 +230,8 @@ Future<List<UpsKind>> filledUps() async {
   Future<List<ChillerKind>> unfilledChillers() async {
     List<ChillerKind> chillers = <ChillerKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledchillers/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/unfilledchillers/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -243,10 +249,12 @@ Future<List<UpsKind>> filledUps() async {
       throw Exception('Failed to load Notify');
     }
   }
-Future<List<ChillerKind>> filledChillers() async {
+
+  Future<List<ChillerKind>> filledChillers() async {
     List<ChillerKind> chillers = <ChillerKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/filledchillers/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/filledchillers/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -265,10 +273,11 @@ Future<List<ChillerKind>> filledChillers() async {
     }
   }
 
-Future<List<HeaterKind>> unfilledHeaters() async {
+  Future<List<HeaterKind>> unfilledHeaters() async {
     List<HeaterKind> heaters = <HeaterKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/unfilledheaters/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/unfilledheaters/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -290,7 +299,8 @@ Future<List<HeaterKind>> unfilledHeaters() async {
   Future<List<HeaterKind>> filledHeaters() async {
     List<HeaterKind> heaters = <HeaterKind>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/filledheaters/${globals.campus}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/filledheaters/${globals.campus}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -309,10 +319,11 @@ Future<List<HeaterKind>> unfilledHeaters() async {
     }
   }
 
-Future<List<Document>> getDocumentsByFolder(String folder) async {
+  Future<List<Document>> getDocumentsByFolder(String folder) async {
     List<Document> folders = <Document>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/getDocumentsByFolder/${folder}"));
+    final response = await http
+        .get(Uri.parse("${url}:8000/api/getDocumentsByFolder/${folder}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -334,7 +345,8 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
   Future<List<String>> getJobImages(job_id) async {
     List<String> urls = <String>[];
 
-    final response = await http.get(Uri.parse("${url}:8000/api/getjobimages/${job_id}"));
+    final response =
+        await http.get(Uri.parse("${url}:8000/api/getjobimages/${job_id}"));
 
     if (response.statusCode == 200) {
       List<dynamic> values = <dynamic>[];
@@ -353,8 +365,6 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     }
   }
 
-
-
   Future<Job> getLatestJob() async {
     final response = await http.get(Uri.parse('${url}:8000/api/getLatestJob/'),
         headers: <String, String>{
@@ -372,7 +382,8 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
   }
 
   Future<Generator> getGeneratorByKind(int id) async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getGeneratorByKind/${id}'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getGeneratorByKind/${id}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -383,12 +394,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Generator(0,"","","",0,"","",0,"","","",0);
+      return Generator(0, "", "", "", 0, "", "", 0, "", "", "", 0);
     }
   }
 
   Future<Chiller> getChillerByKind(int id) async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getChillerByKind/${id}'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getChillerByKind/${id}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -399,12 +411,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Chiller( 0,"","","",0,"",0,"","","",0);
+      return Chiller(0, "", "", "", 0, "", 0, "", "", "", 0);
     }
   }
 
   Future<Heater> getHeaterByKind(int id) async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getHeaterByKind/${id}'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getHeaterByKind/${id}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -415,13 +428,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Heater( 0,"","","",0,"",0,"","","","",0);
-
+      return Heater(0, "", "", "", 0, "", 0, "", "", "", "", 0);
     }
   }
 
   Future<Ups> getUpsByKind(int id) async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getUpsByKind/${id}'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getUpsByKind/${id}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -432,12 +445,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Ups(0,"","","",0,"",0,"","","",0);
+      return Ups(0, "", "", "", 0, "", 0, "", "", "", 0);
     }
   }
 
   Future<Generator> getLatestGenerator() async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getLatestGenerator/'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getLatestGenerator/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -448,7 +462,7 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Generator(0,"","","",0,"","",0,"","","",0);
+      return Generator(0, "", "", "", 0, "", "", 0, "", "", "", 0);
     }
   }
 
@@ -464,12 +478,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Ups(0,"","","",0,"",0,"","","",0);
+      return Ups(0, "", "", "", 0, "", 0, "", "", "", 0);
     }
   }
 
   Future<Chiller> getLatestChiller() async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getLatestChiller/'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getLatestChiller/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -480,12 +495,13 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Chiller( 0,"","","",0,"",0,"","","",0);
+      return Chiller(0, "", "", "", 0, "", 0, "", "", "", 0);
     }
   }
 
   Future<Heater> getLatestHeater() async {
-    final response = await http.get(Uri.parse('${url}:8000/api/getLatestHeater/'),
+    final response = await http.get(
+        Uri.parse('${url}:8000/api/getLatestHeater/'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         });
@@ -496,7 +512,7 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      return Heater( 0,"","","",0,"",0,"","","","",0);
+      return Heater(0, "", "", "", 0, "", 0, "", "", "", "", 0);
     }
   }
 
@@ -612,7 +628,7 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Navigator.of(context).pop();
   }
-        
+
   newUps(Ups ups, BuildContext context) async {
     final response = await http.post(
       Uri.parse("${url}:8000/api/newups/${globals.id}"),
@@ -681,7 +697,6 @@ Future<List<Document>> getDocumentsByFolder(String folder) async {
         "waterPressure": heater.waterPressure,
         "term": heater.term,
       }),
-        
     );
     final snackBar = SnackBar(
       content: const Text('Heater kaydedildi'),
@@ -895,8 +910,18 @@ class Ups {
   late String load;
   late int term;
 
-  Ups(this.id, this.campus, this.description, this.heat, this.kind,
-      this.voltageIn, this.user_id, this.voltageOut, this.date, this.load, this.term);
+  Ups(
+      this.id,
+      this.campus,
+      this.description,
+      this.heat,
+      this.kind,
+      this.voltageIn,
+      this.user_id,
+      this.voltageOut,
+      this.date,
+      this.load,
+      this.term);
 
   factory Ups.fromJson(Map<String, dynamic> json) => Ups(
         json["id"],

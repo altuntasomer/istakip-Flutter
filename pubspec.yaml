@@ -46,6 +46,8 @@ dependencies:
   firebase_messaging:
   flutter_local_notifications:
 
+  auto_size_text:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
