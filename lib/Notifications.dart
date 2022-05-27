@@ -55,63 +55,50 @@ class _NotificationsState extends State<Notifications> {
           borderRadius: BorderRadius.circular(5),
         ),
         child: Container(
-          height: 90,
+          height: 120,
           // width: size.width,
 
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 20),
-                height: 90,
-                width: 50,
-                child: Icon(
-                  Icons.notifications_active_outlined,
-                  color: Color(0xff363636),
-                  size: 30,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 20, top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: AutoSizeText(
-                        notification.description,
-                        textDirection: TextDirection.ltr,
-                        textAlign: TextAlign.justify,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Color(0xff363636),
-                          fontSize: 17,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+          child: Container(
+            margin: EdgeInsets.only(left: 20, top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: AutoSizeText(
+                    notification.description,
+                    textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.justify,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Color(0xff363636),
+                      fontSize: 17,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w700,
                     ),
-                    Text(
-                      notification.date.split(':')[0].replaceAll('T', '  ') +
-                          ":" +
-                          notification.date.split(':')[1],
-                      style: TextStyle(
-                          color: Color(0xffababab),
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w300,
-                          fontSize: 18),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                    notification.date.split(':')[0].replaceAll('T', '  ') +
+                        ":" +
+                        notification.date.split(':')[1],
+                    style: TextStyle(
+                        color: Color(0xffababab),
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
